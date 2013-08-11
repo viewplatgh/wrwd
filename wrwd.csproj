@@ -51,8 +51,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\main.css" />
     <Content Include="css\wrwd1.css" />
     <Content Include="index.html" />
+    <Content Include="js\splitter.js" />
     <Content Include="js\wrwd1.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
