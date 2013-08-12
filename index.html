@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Language" content="en" />
@@ -20,34 +20,48 @@
         
         #MySplitter
         {
-            border: 3px solid #669;
+            border: 3px solid #000033;
             min-width: 500px; /* Splitter can't be too thin ... */
             min-height: 300px; /* ... or too flat */
             height: 100%;
         }
-        #LeftPane
+        #TreePane
         {
-            width: 150px;
-            min-width: 100px;
-            max-width: 300px;
+            width: 300px;
+            min-width: 200px;
+            max-width: 500px;
         }
-        #TopPane
+        #RightPane
+        {
+            width: auto;
+        }
+        #MainPane
         {
             /* Top nested in right pane */
             height: 150px; /* Initial height */
             min-height: 75px; /* Minimum height */
         }
-        #BottomPane
+        #OutputPane
         {
-            background: #eef;
-            min-height: 100px;
+            width: 800px;
+            min-width: 500px;
+            max-width: 960px;
+        }
+        #InfoPane
+        {
+            width: auto;
+        }
+        #CmdPane
+        {
+            min-height: 20px;
+            max-height: 50px;
         }
         
         /* Splitbar styles; these are the default class names */
         
         .ui-state-default
         {
-            background-color: #88c;
+            background-color: #000033;
         }
         .ui-state-hover
         {
@@ -69,28 +83,24 @@
         .splitter-bar-vertical
         {
             width: 6px;
-            background-image: url(img/vgrabber.gif);
             background-repeat: no-repeat;
             background-position: center;
         }
         .splitter-bar-vertical-docked
         {
             width: 10px;
-            background-image: url(img/vdockbar-trans.gif);
             background-repeat: no-repeat;
             background-position: center;
         }
         .splitter-bar-horizontal
         {
             height: 6px;
-            background-image: url(img/hgrabber.gif);
             background-repeat: no-repeat;
             background-position: center;
         }
         .splitter-bar-horizontal-docked
         {
             height: 10px;
-            background-image: url(img/hdockbar-trans.gif);
             background-repeat: no-repeat;
             background-position: center;
         }
@@ -119,7 +129,14 @@
                 sizeTop: true,
                 accessKey: "H"
             });
-
+            
+            $("#MainPane").splitter({
+                splitVertical: true,
+                outline: true,
+                sizeLeft: true,
+                accessKey: "M"
+            });
+            
         });
     </script>
 </head>
@@ -137,30 +154,34 @@
         </p>
     </div>
     <div id="MySplitter">
-        <div id="LeftPane">
+        <div id="TreePane">
             <p>
                 This is the left pane of the 3-pane splitter. It has been limited to a range of
                 100 to 300 pixels wide with the minA/maxA properties of the plugin. It starts at
-                150 pixels wide because of the #LeftPane's width property.</p>
+                150 pixels wide because of the #TreePane's width property.</p>
             <p>
                 Essentially, a 3-pane splitter is just a vertical splitter with a horizontal splitter
                 nested in the right-hand side. This same technique can be used to create multiple
                 vertical and/or horizontal splitter layouts.</p>
         </div>
-        <!-- #LeftPane -->
+        <!-- #TreePane -->
         <div id="RightPane">
-            <div id="TopPane">
-                <p>
-                    This is the top-right part of the 3-pane splitter. It starts at 150 pixels because
-                    the height of #TopPane was set in the stylesheet. The stylesheet has also set <code>
-                        min-height: 75px</code> so it can't get any smaller than that.</p>
-                <p>
-                    The splitbars are keyboard-accessible. Use <kbd>Alt-Shift-I</kbd> to select the
-                    vertical splitbar, or <kbd>Alt-Shift-H</kbd> for the horizontal one. Then use the
-                    arrow keys to move the bar. The plugin lets you specify any key for the access key,
-                    but be sure to test on all browsers in case they reserve those keystrokes.</p>
+            <div id="MainPane">
+                <div id="OutputPane">
+                    <p>
+                        This is the top-right part of the 3-pane splitter. It starts at 150 pixels because
+                        the height of #MainPane was set in the stylesheet. The stylesheet has also set <code>
+                            min-height: 75px</code> so it can't get any smaller than that.</p>
+                </div>
+                <div id="InfoPane">
+                    <p>
+                        The splitbars are keyboard-accessible. Use <kbd>Alt-Shift-I</kbd> to select the
+                        vertical splitbar, or <kbd>Alt-Shift-H</kbd> for the horizontal one. Then use the
+                        arrow keys to move the bar. The plugin lets you specify any key for the access key,
+                        but be sure to test on all browsers in case they reserve those keystrokes.</p>
+                </div>
             </div>
-            <div id="BottomPane">
+            <div id="CmdPane">
                 <p>
                     This is the bottom-right part of the 3-pane splitter. It can't get any smaller than
                     100 pixels tall--because the stylesheet says so, that's why.</p>
@@ -171,7 +192,7 @@
                     perform an impossible act--like setting itself to a negative height if window is
                     resized above the top of the splitter!</p>
             </div>
-            <!-- #BottomPane -->
+            <!-- #CmdPane -->
         </div>
         <!-- #RightPane -->
     </div>
