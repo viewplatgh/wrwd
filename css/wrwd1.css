@@ -76,7 +76,7 @@
         
 .splitter-pane
 {
-    overflow: auto;
+    overflow: hidden;
 }
 .splitter-bar-vertical
 {

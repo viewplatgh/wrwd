@@ -3,46 +3,132 @@
 <head>
     <meta http-equiv="Content-Language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RWD web revision</title>
+    <title>RWD web edition</title>
     <link rel="stylesheet" type="text/css" href="css/wrwd1.css" />
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui-themes/start/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-themes/base/jquery.ui.menubar.css" />
     <script src="js/jquery-1.8.3.js"></script>
     <script src="js/ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/ui/jquery.ui.menubar.js"></script>
     <script type="text/javascript" src="js/splitter.js"></script>
     <script type="text/javascript">
         $().ready(function () {
-            try {
-                // Vertical splitter. Set min/max/starting sizes for the left pane.
-                $("#MySplitter").splitter({
-                    splitVertical: true,
-                    outline: true,
-                    sizeLeft: true,
-                    resizeTo: window,
-                    accessKey: "I"
-                });
-                // Horizontal splitter, nested in the right pane of the vertical splitter.
-                $("#RightPane").splitter({
-                    splitHorizontal: true,
-                    sizeTop: true,
-                    accessKey: "H"
-                });
+            // Vertical splitter. Set min/max/starting sizes for the left pane.
+            $("#MySplitter").splitter({
+                splitVertical: true,
+                outline: true,
+                sizeLeft: true,
+                resizeTo: window,
+                accessKey: "I"
+            });
+            // Horizontal splitter, nested in the right pane of the vertical splitter.
+            $("#RightPane").splitter({
+                splitHorizontal: true,
+                sizeTop: true,
+                accessKey: "H"
+            });
 
-                $("#MainPane").splitter({
-                    splitVertical: true,
-                    outline: true,
-                    sizeLeft: true,
-                    accessKey: "M"
-                });
-            }
-            catch (e) {
-            }
+            $("#MainPane").splitter({
+                splitVertical: true,
+                outline: true,
+                sizeLeft: true,
+                accessKey: "M"
+            });
 
+            /*
+            $("#menu").menubar({
+                autoExpand: true,
+                menuIcon: true,
+                buttons: true,
+                select: true
+            });
+            */
+            $("#bar1").menubar({
+                position: {
+                    within: $("#demo-frame").add(window).first()
+                }
+            });
         });
     </script>
 </head>
 <body>
     <div id="Header">
-        <h>RWD web revision</h>
+        <h1>RWD web edition</h1>
+    </div>
+    <div id="MenuBar">
+<ul id="bar1" class="menubar">
+	<li><a href="#About">About</a></li>
+	<li>
+		<a href="#File">File</a>
+		<ul>
+			<li><a href="#Open...">Open...</a></li>
+			<li class="ui-state-disabled"><a href="#">Open recent...</a></li>
+			<li><a href="#Save">Save</a></li>
+			<li><a href="#Save%20as...">Save as...</a></li>
+			<li><a href="#Close">Close</a></li>
+			<li><a href="#Quit">Quit</a></li>
+		</ul>
+	</li>
+	<li>
+		<a href="#Edit">Edit</a>
+		<ul>
+			<li><a href="#Copy">Copy</a></li>
+			<li><a href="#Cut">Cut</a></li>
+			<li class="ui-state-disabled"><a href="#">Paste</a></li>
+		</ul>
+	</li>
+	<li>
+		<a href="#View">View</a>
+		<ul>
+			<li><a href="#Fullscreen">Fullscreen</a></li>
+			<li><a href="#Fit%20into%20view">Fit into view</a></li>
+			<li>
+				<a href="#Encoding">Encoding</a>
+				<ul>
+					<li><a href="#Auto-detect">Auto-detect</a></li>
+					<li><a href="#UTF-8">UTF-8</a></li>
+					<li>
+						<a href="#UTF-16">UTF-16</a>
+						<ul>
+							<li><a href="#Option%201">Option 1</a></li>
+							<li><a href="#Option%202">Option 2</a></li>
+							<li><a href="#Option%203">Option 3</a></li>
+							<li><a href="#Option%204">Option 4</a></li>
+						</ul>
+				   </li>
+				</ul>
+			</li>
+			<li><a href="#Customize...">Customize...</a></li>
+		</ul>
+	</li>
+</ul>
+            <!--
+        <ul id="menu">
+            <li>
+                <a href="#">File</a>
+                <ul>
+                    <li><a href="#">New</a></li>
+                </ul>    
+            </li>
+            <li><a href="#">Saarland</a></li>
+            <li>
+                <a href="#">Edit</a>
+                <ul>
+                    <li><a href="#">Undo</a></li>
+                    <li><a href="#">Redo</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">View</a>
+                <ul>
+                    <li><a href="#">Wordbook Explorer</a></li>
+                    <li><a href="#">Task View</a></li>
+                </ul>
+            </li>
+        </ul>
+            -->
+    </div>
+    <div id="ToolBar">
     </div>
     <div id="MySplitter">
         <div id="TreePane">

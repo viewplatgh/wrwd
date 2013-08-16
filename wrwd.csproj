@@ -51,6 +51,25 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\jquery-ui-themes\base\jquery-ui.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.accordion.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.all.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.base.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.button.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.core.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.datepicker.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.dialog.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.menu.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.menubar.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.progressbar.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.resizable.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.selectable.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.slider.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.spinner.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.tabs.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.theme.css" />
+    <Content Include="css\jquery-ui-themes\base\jquery.ui.tooltip.css" />
     <Content Include="css\wrwd1.css" />
     <Content Include="index.html" />
     <Content Include="js\splitter.js" />
@@ -67,9 +86,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="css\jquery-ui-themes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
