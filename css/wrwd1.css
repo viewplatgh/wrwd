@@ -1,54 +1,69 @@
-﻿	p {
-		font-size:		1em;
-		margin:			1ex 0;
+﻿/* customize borders to avoid double-borders around inner-layouts */
+.ui-layout-pane {
+	border:			0; /* override layout-default-latest.css */
+	border-top:		1px solid #BBB;
+	border-bottom:	1px solid #BBB;
+}
+.ui-layout-pane-north ,
+.ui-layout-pane-south {
+	border:			1px solid #BBB;
+	overflow:		hidden;
+}
+.ui-layout-pane-west ,
+.ui-layout-pane-east {
+}
+.ui-layout-pane-center	{
+	border-left:	0;
+	border-right:	0;
 	}
-	p.buttons {
-		text-align:		center;
-		line-height:	2.5em;
-	}
-	button {
-		line-height:	normal;
-	}
-	.hidden {
-		display:		none;
+	.inner-center {
+		border:		1px solid #BBB;
 	}
 
-	/*
-	 *	Rules for simulated drop-down/pop-up lists
-	 */
-	ul {
-		/* rules common to BOTH inner and outer UL */
-		z-index:	100000;
-		margin:		1ex 0;
-		padding:	0;
-		list-style:	none;
-		cursor:		pointer;
-		border:		1px solid Black;
-		/* rules for outer UL only */
-		width:		15ex;
-		position:	relative;
-	}
-	ul li {
-		background-color: #EEE;
-		padding: 0.15em 1em 0.3em 5px;
-	}
-	ul ul {
-		display:	none;
-		position:	absolute;
-		width:		100%;
-		left:		-1px;
-		/* Pop-Up */
-		bottom:		0;
-		margin:		0;
-		margin-bottom: 1.55em;
-	}
-	.ui-layout-north ul ul {
-		/* Drop-Down */
-		bottom:		auto;
-		margin:		0;
-		margin-top:	1.45em;
-	}
-	ul ul li		{ padding: 3px 1em 3px 5px; }
-	ul ul li:hover	{ background-color: #FF9; }
-	ul li:hover ul	{ display:	block; background-color: #EEE; }
-	
+/* add shading to outer sidebar-panes */
+.outer-west ,
+.outer-east {
+	background-color: #EEE;
+}
+.middle-west ,
+.middle-east {
+	background-color: #F8F8F8;
+}
+
+/* remove padding & scrolling from panes that are 'containers' for nested layouts */
+.outer-center ,
+.middle-center {
+	border:			0; /* cosmetic */
+	padding:		0;
+	overflow:		hidden;
+}
+
+/*
+ *	customize borders on panes/resizers to make pretty
+ */
+.ui-layout-pane-west		{ border-right:		0; }
+.ui-layout-resizer-west		{ border-left:		1px solid #BBB; }
+.ui-layout-pane-east		{ border-left:		0; }
+.ui-layout-resizer-east		{ border-right:		1px solid #BBB; }
+.ui-layout-pane-north		{ border-bottom:	0; }
+.ui-layout-resizer-north	{ border-top:		1px solid #BBB; }
+.ui-layout-pane-south		{ border-top:		0; }
+.ui-layout-resizer-south	{ border-bottom: 	1px solid #BBB; }
+/*
+ *	add borders to resizers when pane is 'closed'
+ *
+ *.ui-layout-resizer-closed	{ border:			1px solid #BBB; }
+ */
+/*
+ *	show both borders when the resizer is 'dragging'
+ */
+.ui-layout-resizer-west-dragging ,
+.ui-layout-resizer-east-dragging {
+	border-left:		1px solid #BBB;
+	border-right:		1px solid #BBB;
+}
+.ui-layout-resizer-north-dragging ,
+.ui-layout-resizer-south-dragging {
+	border-top:		1px solid #BBB;
+	border-bottom:	1px solid #BBB;
+}

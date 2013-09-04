@@ -75,6 +75,9 @@
     <Content Include="js\splitter.js" />
     <Content Include="js\wrwd1.js" />
     <Content Include="readme.txt" />
+    <Content Include="sample\nested.html" />
+    <Content Include="sample\nest_simple.html" />
+    <Content Include="sample\simple.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
