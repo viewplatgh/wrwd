@@ -35,7 +35,20 @@
 .middle-center {
 	border:			0; /* cosmetic */
 	padding:		0;
-	overflow:		hidden;
+	overflow:		hidden;    
+}
+.middle-south {
+	border:			0; /* cosmetic */
+	padding:		0;
+	overflow:		hidden;	
+	background: #fefefe;
+	color: #333;
+	font-weight: bold;
+}
+
+div.jquery-console-focus span.jquery-console-cursor 
+{
+    background:#fefefe; color:#333; font-weight:bold 
 }
 
 /*
