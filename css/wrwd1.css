@@ -39,16 +39,18 @@
 }
 .middle-south {
 	border:			0; /* cosmetic */
-	padding:		0;
-	overflow:		hidden;	
-	background: #fefefe;
-	color: #333;
-	font-weight: bold;
+	padding:		2px;
+	overflow:		hidden;
 }
 
 div.jquery-console-focus span.jquery-console-cursor 
 {
-    background:#fefefe; color:#333; font-weight:bold 
+    border: 1px solid black;
+}
+
+span.jquery-console-prompt-label
+{
+    margin: 0 5px 0 5px;
 }
 
 /*

@@ -25,30 +25,36 @@
                     east__paneSelector: ".middle-east",
                     south__paneSelector: ".middle-south",
                     east__size: 225,
-                    south__size: 30,
-                    south__minSize: 30,
+                    south__size: 25,
+                    south__minSize: 25,
                     spacing_open: 4,
                     spacing_closed: 6
                 }
             });
 
             $(".middle-south").console({
-                promptLabel: " > ",
+                promptLabel: ">",
                 commandValidate: function (line) {
                     return true;
                 },
                 commandHandle: function (line) {
-                    try {
-                        var ret = eval(line);
-                        if (typeof ret != 'undefined') return ret.toString();
-                        else return true;
-                    }
-                    catch (e) { return e.toString(); }
+                    //                    try {
+                    //                        var ret = eval(line);
+                    //                        if (typeof ret != 'undefined') return ret.toString();
+                    //                        else return true;
+                    //                    }
+                    //                    catch (e) { return e.toString(); }
+
+                    return true;
                 },
                 animateScroll: false,
                 promptHistory: false,
+                disposable: true
             });
+
+            self.setInterval(function () { $(".jquery-console-cursor").toggle(); }, 500);
         });
+
     </script>
 </head>
 <body>
