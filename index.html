@@ -10,6 +10,13 @@
     <script src="js/jquery.layout-1.3.0.js"></script>
     <script src="js/jquery.console.js"></script>
     <script>
+
+        function wrwdOutput(text) {
+            line = $("<div class=\"wrwd-output\"></div>")
+            line.text(text);
+            $(".middle-center").append(line);
+        }
+
         $(document).ready(function () {
             $('body').layout({
                 center__paneSelector: ".outer-center",
@@ -44,7 +51,7 @@
                     //                        else return true;
                     //                    }
                     //                    catch (e) { return e.toString(); }
-
+                    wrwdOutput(line);
                     return true;
                 },
                 animateScroll: false,
@@ -53,6 +60,16 @@
             });
 
             self.setInterval(function () { $(".jquery-console-cursor").toggle(); }, 500);
+
+            wrwdOutput("Welcome to RWD web edition");
+            wrwdOutput("Copyright (C) 2013 viewpl");
+            wrwdOutput("type 'help -l' for details.");
+        });
+
+        $(window).keydown(function (k) {
+            if (k.char == '>') {
+                $(".middle-south").click();
+            }
         });
 
     </script>

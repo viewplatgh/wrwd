@@ -34,8 +34,8 @@
 .outer-center ,
 .middle-center {
 	border:			0; /* cosmetic */
-	padding:		0;
-	overflow:		hidden;    
+	padding:		2px;
+	overflow:       auto;
 }
 .middle-south {
 	border:			0; /* cosmetic */
@@ -51,6 +51,11 @@ div.jquery-console-focus span.jquery-console-cursor
 span.jquery-console-prompt-label
 {
     margin: 0 5px 0 5px;
+}
+
+div.wrwd-ouput
+{
+    font: Arial;
 }
 
 /*
