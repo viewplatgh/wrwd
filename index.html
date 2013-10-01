@@ -9,13 +9,56 @@
     <script src="js/ui/jquery-ui.js"></script>
     <script src="js/jquery.layout-1.3.0.js"></script>
     <script src="js/jquery.console.js"></script>
+    <script src="js/wrwd1.js"></script>
     <script>
+        var wrwd = {
+            output : function (text) {
+                line = $("<div class=\"wrwd-output\"></div>")
+                line.text(text);
+                $(".middle-center").append(line);                
+            },
+            cmdParse : function(line) {
+                var argv = line.split(' ');
+                var optstr;
+                switch(argv[0]) {
+                    case 'new':
+                        optstr = 'f:(file)p:(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)';
+                        //optstr = 'f:(file)';
+                        argv.shift();
+                        argv.unshift('');
+                        argv.unshift('new');
 
-        function wrwdOutput(text) {
-            line = $("<div class=\"wrwd-output\"></div>")
-            line.text(text);
-            $(".middle-center").append(line);
-        }
+                        var parser, option;
+
+                        parser = new goBasicParser(optstr, argv);
+
+                        while ((option = parser.getopt()) !== undefined) {
+                            switch (option.option) {
+                            case 'f':
+                                wrwd.output('option "f" is set, optarg=' + option.optarg);
+                                break;
+
+                            case 'p':
+                                wrwd.output('option "p" is set, optarg=' + option.optarg);
+                                break;
+
+                            case 'w':
+                                wrwd.output('option "w" is set, optarg=' + option.optarg);
+                                break;
+
+                            default:
+                                /* error message already emitted by getopt */
+                                //mod_assert.equal('?', option.option);
+                                //wrwdOutput('unexpected option %s %s', option.option, option.optarg);
+
+                                break;
+                            }
+                        }
+
+                        break;
+                }                
+            }
+        };
 
         $(document).ready(function () {
             $('body').layout({
@@ -51,7 +94,8 @@
                     //                        else return true;
                     //                    }
                     //                    catch (e) { return e.toString(); }
-                    wrwdOutput(line);
+                    wrwd.output(line);
+                    wrwd.cmdParse(line);
                     return true;
                 },
                 animateScroll: false,
@@ -61,13 +105,14 @@
 
             self.setInterval(function () { $(".jquery-console-cursor").toggle(); }, 500);
 
-            wrwdOutput("Welcome to RWD web edition");
-            wrwdOutput("Copyright (C) 2013 viewpl");
-            wrwdOutput("type 'help -l' for details.");
+            wrwd.output("Welcome to RWD web edition");
+            wrwd.output("Copyright (C) 2013 viewpl");
+            wrwd.output("type 'help -l' for details.");
         });
 
         $(window).keydown(function (k) {
-            if (k.char == '>') {
+            var code = (k.keyCode ? k.keyCode : k.which);
+            if (code == '>') {
                 $(".middle-south").click();
             }
         });
