@@ -1,6 +1,16 @@
-﻿function ASSERT(v) {
+﻿
+function ASSERT(v) {
     if (!v) {
         throw new Error("Assert failure! " + v + " is not true!");
+    }
+}
+
+function supports_html5_storage() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } 
+    catch (e) {
+        return false;
     }
 }
 
@@ -280,14 +290,14 @@ goBasicParser.prototype.errMissingArg = function (chr)
     if (this.gop_silent)
         return ({ option: ':', optopt: chr });
 
-    process.stderr.write('option requires an argument -- ' + chr + '\n');
+    this.wrwd.output('option requires an argument -- ' + chr + '\n');
     return ({ option: '?', optopt: chr, error: true });
 };
 
 goBasicParser.prototype.errInvalidOption = function (chr)
 {
     if (!this.gop_silent)
-        process.stderr.write('illegal option -- ' + chr + '\n');
+        this.wrwd.output('illegal option -- ' + chr + '\n');
 
     return ({ option: '?', optopt: chr, error: true });
 };
@@ -300,8 +310,143 @@ goBasicParser.prototype.errInvalidOption = function (chr)
 goBasicParser.prototype.errExtraArg = function (chr)
 {
     if (!this.gop_silent)
-        process.stderr.write('option expects no argument -- ' +
+        this.wrwd.output('option expects no argument -- ' +
             chr + '\n');
 
     return ({ option: '?', optopt: chr, error: true });
 };
+
+
+
+var wrwd = ({});
+wrwd.remember_type = { unknown:0, imaging:1, known:2, familiar:3, impressed:4 };
+
+wrwd.ouput = function (text) {
+        line = $("<div class=\"wrwd-output\"></div>");
+        line.text(text);
+        $(".middle-center").append(line);   
+    };
+
+wrwd.cmdParse = function (line) {
+        var argv = line.split(' ');
+        var optstr;
+        switch(argv[0]) {
+            case 'new':
+                optstr = 'f:(file)p:(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)';
+                argv.shift();
+                argv.unshift('');
+                argv.unshift('new');
+
+                var parser, option;
+
+                parser = new goBasicParser(optstr, argv);
+                parser.wrwd = this;
+
+                while ((option = parser.getopt()) !== undefined) {
+                    switch (option.option) {
+                    case 'f':
+                        wrwd.output('option "f" is set, optarg=' + option.optarg);
+                        break;
+
+                    case 'p':
+                        wrwd.output('option "p" is set, optarg=' + option.optarg);
+                        break;
+
+                    case 'w':
+                        wrwd.output('option "w" is set, optarg=' + option.optarg);
+                        break;
+
+                    default:
+                        /* error message already emitted by getopt */
+                        //mod_assert.equal('?', option.option);
+                        //wrwdOutput('unexpected option %s %s', option.option, option.optarg);
+
+                        break;
+                    }
+                }
+                break;
+        }                
+    }；
+
+wrwd.createWord = (function () {
+    var wordProps = ['term', 'phone', 'source', 'examp', 'rem'];
+
+    return function (wd) { 
+            var word = ({});
+            word.term = '';
+            word.phone = '';
+            word.source = '';
+            word.examp = '';
+            word.rem = this.remember_type.unknown;
+            wordProps.map(function (item) { 
+                if (wd.hasOwnProperty(item)) {
+                    word[item] = wd[item];
+                }
+            });
+            return word;
+        }
+}());
+
+wrwd.createPage = function () {
+    var page = ({});
+    page.idx = 0;
+    page.wordArray = [];
+    page.insertWord = function(pos, wd) {
+        this.page.splice(pos, 0, wd);
+    };
+    page.removeWord = function(pos) {
+        this.page.splice(pos, 1);
+    };
+};
+
+
+$(document).ready(function () {
+    $('body').layout({
+        center__paneSelector: ".outer-center",
+        west__paneSelector: ".outer-west",
+        north__paneSelector: ".outer-north",
+        west__size: 225,
+        north__size: 100,
+        spacing_open: 4,
+        spacing_closed: 6,
+        north__maxSize: 200,
+        center__childOptions: {
+            center__paneSelector: ".middle-center",
+            east__paneSelector: ".middle-east",
+            south__paneSelector: ".middle-south",
+            east__size: 225,
+            south__size: 25,
+            south__minSize: 25,
+            spacing_open: 4,
+            spacing_closed: 6
+        }
+    });
+
+    $(".middle-south").console({
+        promptLabel: ">",
+        commandValidate: function (line) {
+            return true;
+        },
+        commandHandle: function (line) {
+            wrwd.output(line);
+            wrwd.cmdParse(line);
+            return true;
+        },
+        animateScroll: false,
+        promptHistory: false,
+        disposable: true
+    });
+
+    self.setInterval(function () { $(".jquery-console-cursor").toggle(); }, 500);
+
+    wrwd.output("Welcome to RWD web edition");
+    wrwd.output("Copyright (C) 2013 viewpl");
+    wrwd.output("type 'help -l' for details.");
+});
+
+$(window).keydown(function (k) {
+    var code = (k.keyCode ? k.keyCode : k.which);
+    if (code == '>') {
+        $(".middle-south").click();
+    }
+});
