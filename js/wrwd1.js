@@ -1,18 +1,19 @@
-﻿
-function ASSERT(v) {
+var wrwd = ({});
+
+wrwd.ASSERT = function (v) {
     if (!v) {
         throw new Error("Assert failure! " + v + " is not true!");
     }
-}
+};
 
-function supports_html5_storage() {
+wrwd.supports_html5_storage = function () {
     try {
         return 'localStorage' in window && window['localStorage'] !== null;
     } 
     catch (e) {
         return false;
     }
-}
+};
 
 /*
  * getopt.js: node.js implementation of POSIX getopt() (and then some)
@@ -38,25 +39,24 @@ function supports_html5_storage() {
  * SOFTWARE.
  */
 
-
-function goError(msg)
+wrwd.goError = function (msg)
 {
     return (new Error('getopt: ' + msg));
-}
+};
 
 /*
  * The BasicParser is our primary interface to the outside world.  The
  * documentation for this object and its public methods is contained in
  * the included README.md.
  */
-function goBasicParser(optstring, argv)
+wrwd.goBasicParser = function (optstring, argv)
 {
     var ii;
 
-    ASSERT(optstring || optstring === '', 'optstring is required');
-    ASSERT(optstring.constructor === String, 'optstring must be a string');
-    ASSERT(argv, 'argv is required');
-    ASSERT(argv.constructor === Array, 'argv must be an array');
+    wrwd.ASSERT(optstring || optstring === '', 'optstring is required');
+    wrwd.ASSERT(optstring.constructor === String, 'optstring must be a string');
+    wrwd.ASSERT(argv, 'argv is required');
+    wrwd.ASSERT(argv.constructor === Array, 'argv must be an array');
 
     this.gop_argv = new Array(argv.length);
     this.gop_options = {};
@@ -65,13 +65,13 @@ function goBasicParser(optstring, argv)
     this.gop_subind = 0;
 
     for (ii = 0; ii < argv.length; ii++) {
-        ASSERT(argv[ii].constructor === String,
+        wrwd.ASSERT(argv[ii].constructor === String,
             'argv must be string array');
         this.gop_argv[ii] = argv[ii];
     }
 
     this.parseOptstr(optstring);
-}
+};
 
 /*
  * Parse the option string and update the following fields:
@@ -85,7 +85,7 @@ function goBasicParser(optstring, argv)
  *  gop_aliases Maps valid long options to the corresponding
  *          single-letter short option.
  */
-goBasicParser.prototype.parseOptstr = function (optstr)
+wrwd.goBasicParser.prototype.parseOptstr = function (optstr)
 {
     var chr, cp, alias, arg, ii;
 
@@ -128,7 +128,7 @@ goBasicParser.prototype.parseOptstr = function (optstr)
     }
 };
 
-goBasicParser.prototype.optind = function ()
+wrwd.goBasicParser.prototype.optind = function ()
 {
     return (this.gop_optind);
 };
@@ -173,7 +173,7 @@ goBasicParser.prototype.optind = function ()
  *
  *  o Delegate to getoptShort() and return the result.
  */
-goBasicParser.prototype.getopt = function ()
+wrwd.goBasicParser.prototype.getopt = function ()
 {
     if (this.gop_optind >= this.gop_argv.length)
         /* end of input */
@@ -195,7 +195,7 @@ goBasicParser.prototype.getopt = function ()
             return (this.getoptLong());
 
         this.gop_subind++;
-        ASSERT(this.gop_subind < arg.length);
+        wrwd.ASSERT(this.gop_subind < arg.length);
     }
 
     return (this.getoptShort());
@@ -204,13 +204,13 @@ goBasicParser.prototype.getopt = function ()
 /*
  * Implements getopt() for the case where optind/subind point to a short option.
  */
-goBasicParser.prototype.getoptShort = function ()
+wrwd.goBasicParser.prototype.getoptShort = function ()
 {
     var arg, chr;
 
-    ASSERT(this.gop_optind < this.gop_argv.length);
+    wrwd.ASSERT(this.gop_optind < this.gop_argv.length);
     arg = this.gop_argv[this.gop_optind];
-    ASSERT(this.gop_subind < arg.length);
+    wrwd.ASSERT(this.gop_subind < arg.length);
     chr = arg[this.gop_subind];
 
     if (++this.gop_subind >= arg.length) {
@@ -230,14 +230,14 @@ goBasicParser.prototype.getoptShort = function ()
 /*
  * Implements getopt() for the case where optind/subind point to a long option.
  */
-goBasicParser.prototype.getoptLong = function ()
+wrwd.goBasicParser.prototype.getoptLong = function ()
 {
     var arg, alias, chr, eq;
 
-    ASSERT(this.gop_subind === 0);
-    ASSERT(this.gop_optind < this.gop_argv.length);
+    wrwd.ASSERT(this.gop_subind === 0);
+    wrwd.ASSERT(this.gop_optind < this.gop_argv.length);
     arg = this.gop_argv[this.gop_optind];
-    ASSERT(arg.length > 2 && arg[0] == '-' && arg[1] == '-');
+    wrwd.ASSERT(arg.length > 2 && arg[0] == '-' && arg[1] == '-');
 
     eq = arg.indexOf('=');
     alias = arg.substring(2, eq == -1 ? arg.length : eq);
@@ -245,7 +245,7 @@ goBasicParser.prototype.getoptLong = function ()
         return (this.errInvalidOption(alias));
 
     chr = this.gop_aliases[alias];
-    ASSERT(chr in this.gop_options);
+    wrwd.ASSERT(chr in this.gop_options);
 
     if (!this.gop_options[chr]) {
         if (eq != -1)
@@ -272,7 +272,7 @@ goBasicParser.prototype.getoptLong = function ()
  * the appropriate getopt() return value for this option and argument (or return
  * the appropriate error).
  */
-goBasicParser.prototype.getoptArgument = function (chr)
+wrwd.goBasicParser.prototype.getoptArgument = function (chr)
 {
     var arg;
 
@@ -285,19 +285,19 @@ goBasicParser.prototype.getoptArgument = function (chr)
     return ({ option: chr, optarg: arg });
 };
 
-goBasicParser.prototype.errMissingArg = function (chr)
+wrwd.goBasicParser.prototype.errMissingArg = function (chr)
 {
     if (this.gop_silent)
         return ({ option: ':', optopt: chr });
 
-    this.wrwd.output('option requires an argument -- ' + chr + '\n');
+    wrwd.output('option requires an argument -- ' + chr + '\n');
     return ({ option: '?', optopt: chr, error: true });
 };
 
-goBasicParser.prototype.errInvalidOption = function (chr)
+wrwd.goBasicParser.prototype.errInvalidOption = function (chr)
 {
     if (!this.gop_silent)
-        this.wrwd.output('illegal option -- ' + chr + '\n');
+        wrwd.output('illegal option -- ' + chr + '\n');
 
     return ({ option: '?', optopt: chr, error: true });
 };
@@ -307,53 +307,49 @@ goBasicParser.prototype.errInvalidOption = function (chr)
  * long option arguments using "=" in the same argv-argument, but it's common
  * practice and pretty convenient.
  */
-goBasicParser.prototype.errExtraArg = function (chr)
+wrwd.goBasicParser.prototype.errExtraArg = function (chr)
 {
     if (!this.gop_silent)
-        this.wrwd.output('option expects no argument -- ' +
+        wrwd.output('option expects no argument -- ' +
             chr + '\n');
 
     return ({ option: '?', optopt: chr, error: true });
 };
 
-
-
-var wrwd = ({});
 wrwd.remember_type = { unknown:0, imaging:1, known:2, familiar:3, impressed:4 };
 
-wrwd.ouput = function (text) {
-        line = $("<div class=\"wrwd-output\"></div>");
-        line.text(text);
-        $(".middle-center").append(line);   
-    };
+wrwd.output = function (text) {
+    line = $("<div class=\"wrwd-output\"></div>");
+    line.text(text);
+    $(".middle-center").append(line);
+};
 
 wrwd.cmdParse = function (line) {
-        var argv = line.split(' ');
-        var optstr;
-        switch(argv[0]) {
-            case 'new':
-                optstr = 'f:(file)p:(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)';
-                argv.shift();
-                argv.unshift('');
-                argv.unshift('new');
+    var argv = line.split(' ');
+    var optstr;
+    switch (argv[0]) {
+        case 'new':
+            optstr = 'f:(file)p:(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)';
+            argv.shift();
+            argv.unshift('');
+            argv.unshift('new');
 
-                var parser, option;
+            var parser, option;
 
-                parser = new goBasicParser(optstr, argv);
-                parser.wrwd = this;
+            parser = new this.goBasicParser(optstr, argv);
 
-                while ((option = parser.getopt()) !== undefined) {
-                    switch (option.option) {
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
                     case 'f':
-                        wrwd.output('option "f" is set, optarg=' + option.optarg);
+                        this.output('option "f" is set, optarg=' + option.optarg);
                         break;
 
                     case 'p':
-                        wrwd.output('option "p" is set, optarg=' + option.optarg);
+                        this.output('option "p" is set, optarg=' + option.optarg);
                         break;
 
                     case 'w':
-                        wrwd.output('option "w" is set, optarg=' + option.optarg);
+                        this.output('option "w" is set, optarg=' + option.optarg);
                         break;
 
                     default:
@@ -362,22 +358,22 @@ wrwd.cmdParse = function (line) {
                         //wrwdOutput('unexpected option %s %s', option.option, option.optarg);
 
                         break;
-                    }
                 }
-                break;
-        }                
-    }；
+            }
+            break;
+    }
+};
 
 wrwd.createWord = (function () {
     var wordProps = ['term', 'phone', 'source', 'examp', 'rem'];
+    var word = ({});
+    word.term = '';
+    word.phone = '';
+    word.source = '';
+    word.examp = '';
+    word.rem = wrwd.remember_type.unknown;
 
     return function (wd) { 
-            var word = ({});
-            word.term = '';
-            word.phone = '';
-            word.source = '';
-            word.examp = '';
-            word.rem = this.remember_type.unknown;
             wordProps.map(function (item) { 
                 if (wd.hasOwnProperty(item)) {
                     word[item] = wd[item];
