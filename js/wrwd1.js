@@ -366,34 +366,51 @@ wrwd.cmdParse = function (line) {
 
 wrwd.createWord = (function () {
     var wordProps = ['term', 'phone', 'source', 'examp', 'rem'];
-    var word = ({});
-    word.term = '';
-    word.phone = '';
-    word.source = '';
-    word.examp = '';
-    word.rem = wrwd.remember_type.unknown;
 
     return function (wd) { 
-            wordProps.map(function (item) { 
+            var word = ({});
+            word.term = '';
+            word.phone = '';
+            word.source = '';
+            word.examp = '';
+            word.rem = wrwd.remember_type.unknown;
+
+            wordProps.map(function (item) {
                 if (wd.hasOwnProperty(item)) {
                     word[item] = wd[item];
                 }
             });
             return word;
-        }
+        };
 }());
 
-wrwd.createPage = function () {
-    var page = ({});
-    page.idx = 0;
-    page.wordArray = [];
-    page.insertWord = function(pos, wd) {
-        this.page.splice(pos, 0, wd);
+wrwd.createPage = (function () {
+    return function () {
+        var page = ({});
+        page.idx = 0;
+        page.wordArray = [];
+        page.insertWord = function(pos, wd) {
+            this.wordArray.splice(pos, 0, wd);
+        };
+        page.removeWord = function(pos) {
+            this.wordArray.splice(pos, 1);
+        };
     };
-    page.removeWord = function(pos) {
-        this.page.splice(pos, 1);
+}());
+
+wrwd.createFile = (function () {
+    return function () {
+        var file = ({});
+        file.idx = 0;
+        file.pageArray = [];
+        file.insertPage = function(pos, pg) {
+            this.pageArray.splice(pos, 0, pg);
+        };
+        file.removeWord = function(pos) {
+            this.wordArray.splice(pos, 1);
+        };
     };
-};
+}());
 
 
 $(document).ready(function () {
