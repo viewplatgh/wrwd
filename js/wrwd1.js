@@ -395,6 +395,7 @@ wrwd.createPage = (function () {
         page.removeWord = function(pos) {
             this.wordArray.splice(pos, 1);
         };
+        return page;
     };
 }());
 
@@ -406,9 +407,10 @@ wrwd.createFile = (function () {
         file.insertPage = function(pos, pg) {
             this.pageArray.splice(pos, 0, pg);
         };
-        file.removeWord = function(pos) {
-            this.wordArray.splice(pos, 1);
+        file.removePage = function(pos) {
+            this.pageArray.splice(pos, 1);
         };
+        return file;
     };
 }());
 
