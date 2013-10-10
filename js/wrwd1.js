@@ -328,11 +328,11 @@ wrwd.cmdParse = function (line) {
     var argv = line.split(' ');
     var optstr;
     switch (argv[0]) {
-        case 'new':
-            optstr = 'f:(file)p:(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)';
+        case "new":
+            optstr = "f:(file)p(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)";
             argv.shift();
             argv.unshift('');
-            argv.unshift('new');
+            argv.unshift("new");
 
             var parser, option;
 
@@ -341,15 +341,24 @@ wrwd.cmdParse = function (line) {
             while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
                     case 'f':
-                        this.output('option "f" is set, optarg=' + option.optarg);
+                        //this.output("option 'f' is set, optarg=" + option.optarg);
+                        this.file = wrwd.createFile(option.optarg);
+                        this.output(option.optarg);
                         break;
 
                     case 'p':
-                        this.output('option "p" is set, optarg=' + option.optarg);
+                        //this.output("option 'p' is set, optarg=" + option.optarg);
+                        if (typeof(this.file) != "undefined") {
+                            var pg = this.createPage();
+                            this.file.insertPage(this.file.pageArray.length, pg);
+                        }
+                        else {
+                            this.output("File not ready. Create or open a file at first.");
+                        }
                         break;
 
                     case 'w':
-                        this.output('option "w" is set, optarg=' + option.optarg);
+                        //this.output("option 'w' is set, optarg=" + option.optarg);
                         break;
 
                     default:
@@ -357,6 +366,28 @@ wrwd.cmdParse = function (line) {
                         //mod_assert.equal('?', option.option);
                         //wrwdOutput('unexpected option %s %s', option.option, option.optarg);
 
+                        break;
+                }
+            }
+            break;
+        case "browse":
+            optstr = "p:(page)";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("browse");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+                    case 'p':
+                        if (typeof(this.file) != "undefined") {
+                            this.file.browsePage(option.optarg);
+                        }
+                        else {
+                            this.output("File not ready. Create or open a file at first.");
+                        }
+                        break;
+                    default:
                         break;
                 }
             }
@@ -400,15 +431,29 @@ wrwd.createPage = (function () {
 }());
 
 wrwd.createFile = (function () {
-    return function () {
+    return function (name) {
         var file = ({});
+        file.name = name;
         file.idx = 0;
         file.pageArray = [];
         file.insertPage = function(pos, pg) {
+            oldLen = this.pageArray.length;
             this.pageArray.splice(pos, 0, pg);
+            if (oldLen == this.pageArray.length)
+                wrwd.output("Nothing happened to page.");
         };
         file.removePage = function(pos) {
+            oldLen = this.pageArray.length;
             this.pageArray.splice(pos, 1);
+            if (oldLen == this.pageArray.length)
+                wrwd.output("Nothing happened to page.");
+        };
+        file.browsePage = function(pos) {
+            if (typeof(this.pageArray[pos]) == "undefined") {
+                wrwd.output(sprintf("Page %s does not exist", pos));
+                return pos;
+            }
+            this.idx = pos;
         };
         return file;
     };
