@@ -335,30 +335,39 @@ wrwd.cmdParse = function (line) {
             argv.unshift("new");
 
             var parser, option;
+            var nw_word;
 
             parser = new this.goBasicParser(optstr, argv);
 
             while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
                     case 'f':
-                        //this.output("option 'f' is set, optarg=" + option.optarg);
                         this.file = wrwd.createFile(option.optarg);
                         this.output(option.optarg);
                         break;
 
                     case 'p':
-                        //this.output("option 'p' is set, optarg=" + option.optarg);
                         if (typeof(this.file) != "undefined") {
-                            var pg = this.createPage();
+                            var pg = wrwd.createPage();
                             this.file.insertPage(this.file.pageArray.length, pg);
                         }
                         else {
-                            this.output("File not ready. Create or open a file at first.");
+                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
                         }
                         break;
 
                     case 'w':
-                        //this.output("option 'w' is set, optarg=" + option.optarg);
+                        if (typeof(this.file) != "undefined") {
+                            if (typeof(this.file.getIndexPage()) != "undefined") {
+                                nw_word = wrwd.createWord({term:option.optarg}); 
+                            }
+                            else {
+                                this.output("Page not ready. Browse the page at first. e.g: browse -p 0");
+                            }                            
+                        }
+                        else {
+                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
+                        }
                         break;
 
                     default:
@@ -368,6 +377,9 @@ wrwd.cmdParse = function (line) {
 
                         break;
                 }
+            }
+            if (nw_word != undefined) {
+                this.file.getIndexPage().insertWord(undefined, nw_word);
             }
             break;
         case "browse":
@@ -381,10 +393,39 @@ wrwd.cmdParse = function (line) {
                 switch (option.option) {
                     case 'p':
                         if (typeof(this.file) != "undefined") {
-                            this.file.browsePage(option.optarg);
+                            if (typeof(this.file.getPage(option.optarg)) != "undefined") {
+                                this.file.browsePage(option.optarg);    
+                            }
+                            else {
+                                this.output("Page not ready. Create a page at first. e.g: new -p 0");
+                            }                            
                         }
                         else {
-                            this.output("File not ready. Create or open a file at first.");
+                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+        case "list":
+            optstr = "f(file)p(page)";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("list");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+                    case 'f':
+                        for(var i = 0; i < this.file.pageArray.length; ++ i) {
+                            this.output(sprintf("page %d", i));
+                        }
+                        break;
+                    case 'p':
+                        for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
+                            this.output(sprintf("%s", this.file.getIndexPage().getWord(i).term));
                         }
                         break;
                     default:
@@ -421,11 +462,18 @@ wrwd.createPage = (function () {
         page.idx = 0;
         page.wordArray = [];
         page.insertWord = function(pos, wd) {
+            pos = pos === undefined ? this.idx : pos;
             this.wordArray.splice(pos, 0, wd);
         };
         page.removeWord = function(pos) {
             this.wordArray.splice(pos, 1);
         };
+        page.getWord = function(pos) {
+            return this.wordArray[pos];
+        }
+        page.getIndexWord = function() {
+            return this.getWord(this.idx);
+        }
         return page;
     };
 }());
@@ -455,6 +503,12 @@ wrwd.createFile = (function () {
             }
             this.idx = pos;
         };
+        file.getPage = function(pos) {
+            return this.pageArray[pos];
+        };
+        file.getIndexPage = function() {
+            return this.getPage(this.idx);
+        }
         return file;
     };
 }());
