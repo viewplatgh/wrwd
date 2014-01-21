@@ -328,6 +328,107 @@ wrwd.cmdParse = function (line) {
     var argv = line.split(' ');
     var optstr;
     switch (argv[0]) {
+        case "browse":
+            optstr = "p:(page)";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("browse");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+                    case 'p':
+                        if (typeof(this.file) != "undefined") {
+                            if (typeof(this.file.getPage(option.optarg)) != "undefined") {
+                                this.file.browsePage(option.optarg);    
+                            }
+                            else {
+                                this.output("Page not ready. Create a page at first. e.g: new -p 0");
+                            }                            
+                        }
+                        else {
+                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+        case "delete":
+            optstr = "p(page)w(word)";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("delete");
+            parser = new this.goBasicParser(optstr, argv);
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+                    case 'p':
+                        this.file.removeIndexPage();
+                        break;
+                    case 'w':
+                        this.file.getIndexPage().removeIndexWord();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+        case "edit":
+            optstr = "w(word)h(phon)s(source)i(interp)e(examp)r(rem)";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "exit":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "goto":
+            optstr = "";
+            break;
+        case "help":
+            break;
+        case "list":
+            optstr = "f(file)p(page)";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("list");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+                    case 'f':
+                        for(var i = 0; i < this.file.pageArray.length; ++ i) {
+                            this.output(sprintf("page %d", i));
+                        }
+                        break;
+                    case 'p':
+                        for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
+                            this.output(sprintf("%s", this.file.getIndexPage().getWord(i).term));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
         case "new":
             optstr = "f:(file)p(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)";
             argv.shift();
@@ -382,56 +483,153 @@ wrwd.cmdParse = function (line) {
                 this.file.getIndexPage().insertWord(undefined, nw_word);
             }
             break;
-        case "browse":
-            optstr = "p:(page)";
+        case "next":
+            optstr = "";
             argv.shift();
             argv.unshift('');
-            argv.unshift("browse");
+            argv.unshift("");
             parser = new this.goBasicParser(optstr, argv);
 
             while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
-                    case 'p':
-                        if (typeof(this.file) != "undefined") {
-                            if (typeof(this.file.getPage(option.optarg)) != "undefined") {
-                                this.file.browsePage(option.optarg);    
-                            }
-                            else {
-                                this.output("Page not ready. Create a page at first. e.g: new -p 0");
-                            }                            
-                        }
-                        else {
-                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
-                        }
-                        break;
-                    default:
-                        break;
+
                 }
             }
             break;
-        case "list":
-            optstr = "f(file)p(page)";
+        case "open":
+            optstr = "";
             argv.shift();
             argv.unshift('');
-            argv.unshift("list");
+            argv.unshift("");
             parser = new this.goBasicParser(optstr, argv);
 
             while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
-                    case 'f':
-                        for(var i = 0; i < this.file.pageArray.length; ++ i) {
-                            this.output(sprintf("page %d", i));
-                        }
-                        break;
-                    case 'p':
-                        for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
-                            this.output(sprintf("%s", this.file.getIndexPage().getWord(i).term));
-                        }
-                        break;
-                    default:
-                        break;
+
                 }
             }
+            break;
+        case "previous":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "quit":
+            break;
+        case "redo":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "save":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "show":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "size":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "sort":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "state":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "undo":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        case "voice":
+            optstr = "";
+            argv.shift();
+            argv.unshift('');
+            argv.unshift("");
+            parser = new this.goBasicParser(optstr, argv);
+
+            while ((option = parser.getopt()) !== undefined) {
+                switch (option.option) {
+
+                }
+            }
+            break;
+        default:
+            this.output("Unknown command");
             break;
     }
 };
@@ -468,6 +666,9 @@ wrwd.createPage = (function () {
         page.removeWord = function(pos) {
             this.wordArray.splice(pos, 1);
         };
+        page.removeIndexWord = function() {
+            this.removeWord(this.idx);
+        };
         page.getWord = function(pos) {
             return this.wordArray[pos];
         }
@@ -495,6 +696,9 @@ wrwd.createFile = (function () {
             this.pageArray.splice(pos, 1);
             if (oldLen == this.pageArray.length)
                 wrwd.output("Nothing happened to page.");
+        };
+        file.removeIndexPage = function() {
+            this.removePage(this.idx);
         };
         file.browsePage = function(pos) {
             if (typeof(this.pageArray[pos]) == "undefined") {
