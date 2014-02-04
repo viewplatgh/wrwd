@@ -1,5 +1,8 @@
 var wrwd = ({});
 
+wrwd.STR_PAGE_NOT_READY = "Page not ready. Create a page at first. e.g: new -p 0";
+wrwd.STR_FILE_NOT_READY = "File not ready. Create or open a file at first. e.g: new -f myvo";
+
 wrwd.ASSERT = function (v) {
     if (!v) {
         throw new Error("Assert failure! " + v + " is not true!");
@@ -317,6 +320,7 @@ wrwd.goBasicParser.prototype.errExtraArg = function (chr)
 };
 
 wrwd.remember_type = { unknown:0, imaging:1, known:2, familiar:3, impressed:4 };
+wrwd.deal_with_type = { add:0, update:1, erase:2 };
 
 wrwd.output = function (text) {
     line = $("<div class=\"wrwd-output\"></div>");
@@ -343,11 +347,11 @@ wrwd.cmdParse = function (line) {
                                 this.file.browsePage(option.optarg);    
                             }
                             else {
-                                this.output("Page not ready. Create a page at first. e.g: new -p 0");
+                                this.output(this.STR_PAGE_NOT_READY);
                             }                            
                         }
                         else {
-                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
+                            this.output(this.STR_FILE_NOT_READY);
                         }
                         break;
                     default:
@@ -367,7 +371,7 @@ wrwd.cmdParse = function (line) {
                         this.file.removeIndexPage();
                         break;
                     case 'w':
-                        this.file.getIndexPage().removeIndexWord();
+                        this.file.removeIndexWord();
                         break;
                     default:
                         break;
@@ -415,13 +419,28 @@ wrwd.cmdParse = function (line) {
             while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
                     case 'f':
-                        for(var i = 0; i < this.file.pageArray.length; ++ i) {
-                            this.output(sprintf("page %d", i));
+                        if (typeof(this.file) != "undefined") {
+                            for(var i = 0; i < this.file.pageArray.length; ++ i) {
+                                this.output(sprintf("page %d", i));
+                            }
+                        }
+                        else {
+                            this.output(this.STR_FILE_NOT_READY);                            
                         }
                         break;
                     case 'p':
-                        for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
-                            this.output(sprintf("%s", this.file.getIndexPage().getWord(i).term));
+                        if (typeof(this.file) != "undefined") {
+                            if (typeof(this.file.getIndexPage()) != "undefined") {
+                                for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
+                                    this.output(sprintf("%s", this.file.getIndexPage().getWord(i).term));
+                                }
+                            }
+                            else {
+                                this.output(this.STR_PAGE_NOT_READY);
+                            }
+                        }
+                        else {
+                            this.output(this.STR_FILE_NOT_READY);                            
                         }
                         break;
                     default:
@@ -450,24 +469,24 @@ wrwd.cmdParse = function (line) {
                     case 'p':
                         if (typeof(this.file) != "undefined") {
                             var pg = wrwd.createPage();
-                            this.file.insertPage(this.file.pageArray.length, pg);
+                            this.file.backInsertPage(pg);
                         }
                         else {
-                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
+                            this.output(this.STR_FILE_NOT_READY);
                         }
                         break;
 
                     case 'w':
                         if (typeof(this.file) != "undefined") {
                             if (typeof(this.file.getIndexPage()) != "undefined") {
-                                nw_word = wrwd.createWord({term:option.optarg}); 
+                                nw_word = wrwd.createWord({term:option.optarg});
                             }
                             else {
-                                this.output("Page not ready. Browse the page at first. e.g: browse -p 0");
+                                this.output(this.STR_PAGE_NOT_READY);
                             }                            
                         }
                         else {
-                            this.output("File not ready. Create or open a file at first. e.g: new -f myvo");
+                            this.output(this.STR_FILE_NOT_READY);
                         }
                         break;
 
@@ -480,7 +499,7 @@ wrwd.cmdParse = function (line) {
                 }
             }
             if (nw_word != undefined) {
-                this.file.getIndexPage().insertWord(undefined, nw_word);
+                this.file.backInsertIndexWord(nw_word);
             }
             break;
         case "next":
@@ -634,7 +653,16 @@ wrwd.cmdParse = function (line) {
     }
 };
 
-wrwd.createWord = (function () {
+wrwd.dealWithFileChange = function() {
+    return function (pgIdx, wdIdx, dwType, newFile) {
+        // only call this handler in wrwd.file's methods
+        newFile = typeof newFile !== 'undefined' ? newFile : false;
+
+        this.output(sprintf("dealWithFileChange called : %d, %d, %d, %s", pgIdx, wdIdx, dwType, newFile));
+    };
+}();
+
+wrwd.createWord = function () {
     var wordProps = ['term', 'phone', 'source', 'examp', 'rem'];
 
     return function (wd) { 
@@ -652,19 +680,24 @@ wrwd.createWord = (function () {
             });
             return word;
         };
-}());
+}();
 
-wrwd.createPage = (function () {
+wrwd.createPage = function () {
     return function () {
         var page = ({});
-        page.idx = 0;
+        page.idx = -1;
         page.wordArray = [];
         page.insertWord = function(pos, wd) {
-            pos = pos === undefined ? this.idx : pos;
             this.wordArray.splice(pos, 0, wd);
+            this.idx = pos;
         };
+        page.backInsertWord = function(wd) {
+            this.insertWord(this.wordArray.length, wd);
+        }
         page.removeWord = function(pos) {
             this.wordArray.splice(pos, 1);
+            if ((pos < this.idx) || (this.idx == this.wordArray.length))
+                -- this.idx;
         };
         page.removeIndexWord = function() {
             this.removeWord(this.idx);
@@ -677,25 +710,27 @@ wrwd.createPage = (function () {
         }
         return page;
     };
-}());
+}();
 
-wrwd.createFile = (function () {
+wrwd.createFile = function () {
     return function (name) {
         var file = ({});
         file.name = name;
-        file.idx = 0;
+        file.idx = -1;
         file.pageArray = [];
         file.insertPage = function(pos, pg) {
-            oldLen = this.pageArray.length;
             this.pageArray.splice(pos, 0, pg);
-            if (oldLen == this.pageArray.length)
-                wrwd.output("Nothing happened to page.");
+            this.idx = pos;
+            wrwd.dealWithFileChange(pos, -1, wrwd.deal_with_type.add);
         };
+        file.backInsertPage = function(pg) {
+            this.insertPage(this.pageArray.length, pg);
+        }
         file.removePage = function(pos) {
-            oldLen = this.pageArray.length;
             this.pageArray.splice(pos, 1);
-            if (oldLen == this.pageArray.length)
-                wrwd.output("Nothing happened to page.");
+            if ((pos < this.idx) || (this.idx == this.pageArray.length))
+                -- this.idx;
+            wrwd.dealWithFileChange(pos, -1, wrwd.deal_with_type.erase);
         };
         file.removeIndexPage = function() {
             this.removePage(this.idx);
@@ -713,25 +748,35 @@ wrwd.createFile = (function () {
         file.getIndexPage = function() {
             return this.getPage(this.idx);
         }
+        file.removeIndexWord = function() {
+            this.getIndexPage().removeIndexWord();
+            wrwd.dealWithFileChange(this.idx, this.getIndexPage().idx, wrwd.deal_with_type.erase);
+        }
+        file.backInsertIndexWord = function(wd) {
+            this.getIndexPage().backInsertWord(wd);
+            wrwd.dealWithFileChange(this.idx, this.getIndexPage().idx, wrwd.deal_with_type.add);
+        }
+        wrwd.dealWithFileChange(-1, -1, wrwd.deal_with_type.add, true);
         return file;
     };
-}());
+}();
+
 
 
 $(document).ready(function () {
     $('body').layout({
-        center__paneSelector: ".outer-center",
-        west__paneSelector: ".outer-west",
-        north__paneSelector: ".outer-north",
+        center__paneSelector: ".outer-center", // container
+        west__paneSelector: ".outer-west",  // left tree view
+        north__paneSelector: ".outer-north", // website header
         west__size: 225,
         north__size: 100,
         spacing_open: 4,
         spacing_closed: 6,
         north__maxSize: 200,
         center__childOptions: {
-            center__paneSelector: ".middle-center",
-            east__paneSelector: ".middle-east",
-            south__paneSelector: ".middle-south",
+            center__paneSelector: ".middle-center", // ouput console
+            east__paneSelector: ".middle-east", // right list view
+            south__paneSelector: ".middle-south",   // readline/getline console
             east__size: 225,
             south__size: 25,
             south__minSize: 25,
@@ -760,6 +805,64 @@ $(document).ready(function () {
     wrwd.output("Welcome to RWD web edition");
     wrwd.output("Copyright (C) 2013 viewpl");
     wrwd.output("type 'help -l' for details.");
+
+    // debug jstree 
+    $(".outer-west").html("<div id=\"jstree_demo\"> \
+                            <ul>    \
+                                  <li>Root node 1 \
+                                    <ul> \
+                                      <li id=\"child_node_1\">Child node 1</li> \
+                                      <li>Child node 2</li> \
+                                    </ul> \
+                                  </li> \
+                                  <li>Root node 2</li> \
+                                </ul> \
+                            <div>");    
+    $(".outer-west").click( function () { 
+                            $('#jstree_demo').jstree(
+// {
+//                               "core" : {
+//                                 "animation" : 0,
+//                                 "check_callback" : true,
+//                                 "themes" : { "stripes" : true },
+//                                 'data' : {
+//                                   'url' : function (node) {
+//                                     return node.id === '#' ?
+//                                       'ajax_demo_roots.json' : 'ajax_demo_children.json';
+//                                   },
+//                                   'data' : function (node) {
+//                                     return { 'id' : node.id };
+//                                   }
+//                                 }
+//                               },
+//                               "types" : {
+//                                 "#" : {
+//                                   "max_children" : 1, 
+//                                   "max_depth" : 4, 
+//                                   "valid_children" : ["root"]
+//                                 },
+//                                 "root" : {
+//                                   "icon" : "/static/3.0.0-beta5/assets/images/tree_icon.png",
+//                                   "valid_children" : ["default"]
+//                                 },
+//                                 "default" : {
+//                                   "valid_children" : ["default","file"]
+//                                 },
+//                                 "file" : {
+//                                   "icon" : "glyphicon glyphicon-file",
+//                                   "valid_children" : []
+//                                 }
+//                               },
+//                               "plugins" : [
+//                                 "contextmenu", "dnd", "search",
+//                                 "state", "types", "wholerow"
+//                               ]
+//                             }
+                                );
+                        });
+    //$( function () { $("#jstree_demo_div").jstree(); });
+
+    //
 });
 
 $(window).keydown(function (k) {
