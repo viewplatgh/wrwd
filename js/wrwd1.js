@@ -462,7 +462,8 @@ wrwd.cmdParse = function (line) {
             while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
                     case 'f':
-                        this.file = wrwd.createFile(option.optarg);
+                        file = wrwd.createFile(option.optarg);
+                        this.setFile(file);
                         this.output(option.optarg);
                         break;
 
@@ -657,7 +658,7 @@ wrwd.dealWithFileChange = function() {
     return function (pgIdx, wdIdx, dwType, newFile) {
         // only call this handler in wrwd.file's methods
         newFile = typeof newFile !== 'undefined' ? newFile : false;
-
+        $('#outer_west_jstree').jstree(true).refresh();
         this.output(sprintf("dealWithFileChange called : %d, %d, %d, %s", pgIdx, wdIdx, dwType, newFile));
     };
 }();
@@ -756,8 +757,51 @@ wrwd.createFile = function () {
             this.getIndexPage().backInsertWord(wd);
             wrwd.dealWithFileChange(this.idx, this.getIndexPage().idx, wrwd.deal_with_type.add);
         }
-        wrwd.dealWithFileChange(-1, -1, wrwd.deal_with_type.add, true);
+        file.getJsonData = function() {
+            return ['Simple root node',
+                       {
+                         'text' : 'Root node 2',
+                         'state' : {
+                           'opened' : true,
+                           'selected' : true
+                         },
+                         'children' : [
+                           { 'text' : 'Child 1' },
+                           'Child 2'
+                         ]
+                      }
+                    ];
+        }
         return file;
+    };
+}();
+
+wrwd.setFile = function (f) {
+    this.file = f;
+    this.dealWithFileChange(-1, -1, this.deal_with_type.add, true);
+}
+
+wrwd.getFileJsonData = function (){
+    return function () {
+        if (typeof(this.file) != "undefined") {
+            return this.file.getJsonData();
+        }
+        else {
+            return ['Root 1', 'Root 2'];
+        }
+        // return ['Simple root node',
+        //                {
+        //                  'text' : 'Root node 2',
+        //                  'state' : {
+        //                    'opened' : true,
+        //                    'selected' : true
+        //                  },
+        //                  'children' : [
+        //                    { 'text' : 'Child 1' },
+        //                    'Child 2'
+        //                  ]
+        //               }
+        //             ];
     };
 }();
 
@@ -807,19 +851,19 @@ $(document).ready(function () {
     wrwd.output("type 'help -l' for details.");
 
     // debug jstree 
-    $(".outer-west").html("<div id=\"jstree_demo\"> \
-                            <ul>    \
-                                  <li>Root node 1 \
-                                    <ul> \
-                                      <li id=\"child_node_1\">Child node 1</li> \
-                                      <li>Child node 2</li> \
-                                    </ul> \
-                                  </li> \
-                                  <li>Root node 2</li> \
-                                </ul> \
-                            <div>");    
-    $(".outer-west").click( function () { 
-                            $('#jstree_demo').jstree(
+    $(".outer-west").html("<div id=\"outer_west_jstree\"><div>");    
+    //$(".outer-west").pageshow( function () { 
+                            $('#outer_west_jstree').jstree({ 
+                                    "core" : {
+                                        "data" : function (obj, cb) {
+                                            cb.call(this, wrwd.getFileJsonData());
+                                            // cb.call(this, ['Root 1', 'Root 2']);
+                                        }
+                                    },
+                                    lang : {
+                                        new_node : "New ...",
+                                    }
+                                }
 // {
 //                               "core" : {
 //                                 "animation" : 0,
@@ -859,7 +903,7 @@ $(document).ready(function () {
 //                               ]
 //                             }
                                 );
-                        });
+     //                   });
     //$( function () { $("#jstree_demo_div").jstree(); });
 
     //
