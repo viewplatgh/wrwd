@@ -6,12 +6,14 @@ requirejs.config({
 		jquery_layout: "jquery.layout-1.3.0.min",
         jstree: "jstree/jstree.min",
         ace: "ace/ace",
+        sprintf: "sprintf",
+        getopt: "getopt",
         wrwd: "wrwd",
 		//can: ""
 	},
     shim: {
         wrwd: {
-            deps: ["jstree", "ace"],
+            deps: ["jstree", "ace", "sprintf", "getopt"],
         },
         jstree: {
             deps: ["jquery_layout"],
@@ -21,6 +23,7 @@ requirejs.config({
         },
         ace: {
             deps: ["jquery"],
+            exports: 'ace',
         },
     }
 });
@@ -32,7 +35,7 @@ requirejs(["jquery", "wrwd"],
         var shiftDown = false;
         $(window).keydown(function (k) {
             var code = (k.keyCode ? k.keyCode : k.which);
-            console.log(code);
+            //console.log(code);
             switch (code) {
                 case 16: // shift
                     shiftDown = true;
@@ -84,8 +87,8 @@ requirejs(["jquery", "wrwd"],
                                                "dots" : false
                                            },
                                            "data" : function (obj, cb) {
-                                            //cb.call(this, wrwd.getFileJsonData());
-                                        	    cb.call(this, ['Root 1', 'Root 2']);
+                                                cb.call(this, wrwd.getFileJsonData());
+                                        	    //cb.call(this, ['Root 1', 'Root 2']);
                                            }
                                         },
                                         lang : {
