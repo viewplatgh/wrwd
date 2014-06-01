@@ -1,9 +1,24 @@
+ // RWD web edition
+ // Copyright (C) 2014  Rob Lao (www.roblao.com)
+
+ // This program is free software: you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation, either version 3 of the License, or
+ // (at your option) any later version.
+
+ // This program is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details <http://www.gnu.org/licenses/>.
+ 
 "use strict";
 define(function(requirejs){
     var wrwd = ({});
     var $ = requirejs("jquery");
     var ace = requirejs("ace/ace"); //TODO: Not sure why requirejs("ace") does not work
-    //var ace = requirejs("ace");
+    var can = requirejs("can");
+    var canList = requirejs("can/list");
+    var canMap = requirejs("can/map");
     var basicParser = requirejs("getopt");
 
     wrwd.STR_PAGE_NOT_READY = "Page not ready. Create a page at first. e.g: new -p 0";
@@ -19,8 +34,6 @@ define(function(requirejs){
     // };
 
     wrwd.remember_type = { unknown:0, imaging:1, known:2, familiar:3, impressed:4 };
-    wrwd.deal_with_type = { add:0, update:1, erase:2 };
-
 
     wrwd.output = function (text) {
                         var line = $("<div class=\"wrwd-output\"></div>");
@@ -200,7 +213,7 @@ define(function(requirejs){
                         default:
                             /* error message already emitted by getopt */
                             //mod_assert.equal('?', option.option);
-                            //wrwdOutput('unexpected option %s %s', option.option, option.optarg);
+                            //this.output('unexpected option %s %s', option.option, option.optarg);
 
                             break;
                     }
@@ -360,25 +373,34 @@ define(function(requirejs){
         }
     };
 
-    wrwd.dealWithFileChange = function () {
-        return function (pgIdx, wdIdx, dwType, newFile) {
-            // only call this handler in wrwd.file's methods
-            newFile = typeof newFile !== 'undefined' ? newFile : false;
-            $('#outer_west_jstree').jstree(true).refresh();
-            this.output(sprintf("dealWithFileChange called : %d, %d, %d, %s", pgIdx, wdIdx, dwType, newFile));
-        };
-    }();
+    wrwd.onFileChange = function (pgIdx, wdIdx, event, attr, how, newVal, oldVal) {
+        // pgIdx, wdIdx: (?, ?): word, (?, -1): page, (-1, -1): file   
+        // only call this in wrwd module observation event handler
+        $('#outer_west_jstree').jstree(true).refresh();
+        //{{DEBUG
+        this.output(sprintf("onFileChange called : %d, %d, %s, %s, %s, %s, %s", pgIdx, wdIdx, event, attr, how, newVal, oldVal));
+        //}}DEBUG
+    };
 
     wrwd.createWord = function () {
         var wordProps = ['term', 'phone', 'source', 'examp', 'rem'];
+        var rwdWord = canMap.extend({
+            term: '',
+            phone: '',
+            source: '',
+            examp: '',
+            rem: wrwd.remember_type.unknown,
+            getJsonData: function (i) {
+                return { 
+                    "id" : sprintf("word_%s_%d", this.term, i),
+                    "text" : this.term,
+                    "type" : "word",
+                };
+            },
+        });
 
         return function (wd) { 
-                var word = ({});
-                word.term = '';
-                word.phone = '';
-                word.source = '';
-                word.examp = '';
-                word.rem = wrwd.remember_type.unknown;
+                var word = new rwdWord();
 
                 wordProps.map(function (item) {
                     if (wd.hasOwnProperty(item)) {
@@ -386,165 +408,158 @@ define(function(requirejs){
                     }
                 });
 
-                word.getJsonData = function (i) {
-                    return { 
-                        "id" : sprintf("word_%s_%d", this.term, i),
-                        "text" : this.term,
-                        "type" : "word",
-                    };
-                }
+                word.bind("term", function(event, attr, how, newVal, oldVal) {
+                    wrwd.onFileChange(0, 0, event, attr, how, newVal, oldVal); //TODO: find page/word index instead of 0,0
+                });
+
                 return word;
             };
     }();
 
     wrwd.createPage = function () {
-        return function () {
-            var page = ({});
-            page.idx = -1;
-            page.wordArray = [];
-            page.insertWord = function (pos, wd) {
-                this.wordArray.splice(pos, 0, wd);
+        var wrwdPage = canList.extend({
+            idx: -1,
+            insertWord: function(pos, wd) {
+                this.splice(pos, 0, wd);
                 this.idx = pos;
-                wrwd.dealWithFileChange(-1, pos, wrwd.deal_with_type.add);
-            };
-            page.backInsertWord = function (wd) {
-                this.insertWord(this.wordArray.length, wd);
-            }
-            page.removeWord = function (pos) {
-                this.wordArray.splice(pos, 1);
-                if ((pos < this.idx) || (this.idx == this.wordArray.length))
-                    --this.idx;
-                wrwd.dealWithFileChange(-1, pos, wrwd.deal_with_type.erase);
-            };
-            page.removeIndexWord = function () {
+            },
+            backInsertWord: function(wd) {
+                this.insertWord(this.length, wd);
+            },
+            removeWord: function(pos) {
+                this.splice(pos, 1);
+                if ((pos < this.idx) || (this.idx == this.length))
+                    -- this.idx;                
+            },
+            removeIndexWord: function () {
                 this.removeWord(this.idx);
-            };
-            page.getWord = function (pos) {
-                return this.wordArray[pos];
-            }
-            page.getIndexWord = function () {
+            },
+            getWord: function(pos) {
+                return this.attr(pos);
+            },
+            getIndexWord: function () {
                 return this.getWord(this.idx);
-            }
-            page.getWordJsonData = function () {
+            },
+            getWordJsonData: function () {
                 var jsonData = [];
-                for (var i = 0; i < this.wordArray.length; ++ i) {
-                    jsonData.push(this.wordArray[i].getJsonData(i));
+                for (var i = 0; i < this.length; ++ i) {
+                    jsonData.push(this.getWord(i).getJsonData(i));
                 }
                 return jsonData;
-            }
-            page.getJsonData = function (i) {
+            },
+            getJsonData: function (i) {
                 return {
-                    "id" : sprintf("page_%d", i),
-                    "text" : sprintf("page %d", i),
-                    "children" : page.getWordJsonData(),
-                    "type" : "page"
+                    "id": sprintf("page_%d", i),
+                    "text": sprintf("page %d", i),
+                    "children" : this.getWordJsonData(),
+                    "type": "page"
                 };
             }
-            return page;
-        };
+        });
+        return function () {
+                var page = new wrwdPage();
+                page.bind("length", function(event, attr, how, newVal, oldVal) {
+                    wrwd.onFileChange(0, -1, event, attr, how, newVal, oldVal);
+                });
+                return page;
+            };
     }();
 
     wrwd.createFile = function () {
-        return function (name) {
-            var file = ({});
-            file.name = name;
-            file.idx = -1;
-            file.pageArray = [];
-            file.insertPage = function (pos, pg) {
-                this.pageArray.splice(pos, 0, pg);
-                this.idx = pos;
-                wrwd.dealWithFileChange(pos, -1, wrwd.deal_with_type.add);
-            };
-            file.backInsertPage = function (pg) {
-                this.insertPage(this.pageArray.length, pg);
-            };
-            file.removePage = function (pos) {
-                this.pageArray.splice(pos, 1);
-                if ((pos < this.idx) || (this.idx == this.pageArray.length))
+        var wrwdFile = canList.extend({
+            name: '',
+            idx: -1,
+            insertPage: function (pos, pg) {
+                this.splice(pos, 0, pg);
+                this.idx = pos;                
+            },
+            backInsertPage: function (pg) {
+                this.insertPage(this.length, pg);
+            },
+            removePage: function (pos) {
+                this.splice(pos, 1);
+                if ((pos < this.idx) || (this.idx == this.length))
                     -- this.idx;
-                wrwd.dealWithFileChange(pos, -1, wrwd.deal_with_type.erase);
-            };
-            file.removeIndexPage = function () {
+            },
+            removeIndexPage: function () {
                 this.removePage(this.idx);
-            };
-            file.browsePage = function (pos) {
-                if (typeof(this.pageArray[pos]) == "undefined") {
-                    wrwd.output(sprintf("Page %s does not exist", pos));
-                    return pos;
-                }
+            },
+            browsePage: function (pos) {
+                //TODO: remove this validation to cmd parse
+                // if (typeof(this.pageArray[pos]) == "undefined") {
+                //     wrwd.output(sprintf("Page %s does not exist", pos));
+                //     return pos;
+                // }
                 this.idx = pos;
-            };
-            file.getPage = function (pos) {
-                return this.pageArray[pos];
-            };
-            file.getIndexPage = function () {
+            },
+            getPage: function (pos) {
+                return this.attr(pos);
+            },
+            getIndexPage: function () {
                 return this.getPage(this.idx);
-            };
-            file.removeIndexWord = function () {
-                this.getIndexPage().removeIndexWord();
-                wrwd.dealWithFileChange(this.idx, this.getIndexPage().idx, wrwd.deal_with_type.erase);
-            };
-            file.backInsertIndexWord = function (wd) {
+            },
+            removeIndexWord: function () {
+                this.getIndexPage().removeIndexWord(); 
+            },
+            backInsertIndexWord: function (wd) {
                 this.getIndexPage().backInsertWord(wd);
-                wrwd.dealWithFileChange(this.idx, this.getIndexPage().idx, wrwd.deal_with_type.add);
-            };
-            file.getPageJsonData = function () {
+            },
+            getPageJsonData: function () {
                 var jsonData = [];
-                for (var i = 0; i < this.pageArray.length; ++ i) {
-                    jsonData.push(this.pageArray[i].getJsonData(i));
+                for (var i = 0; i < this.length; ++ i) {
+                    jsonData.push(this.getPage(i).getJsonData(i));
                 }
                 return jsonData;
-            };
-            file.getJsonData = function () {
-                return [  //'Simple root node',
-                           {
-                             "id" : file.name,
-                             "text" : file.name,
+            },
+            getJsonData: function () {
+                return [
+                          {
+                             "id" : this.name,
+                             "text" : this.name,
                              "type" : "file",
-                             //'state' : {
-                             //  'opened' : true,
-                             //  'selected' : true
-                             //},
-                             "children": file.getPageJsonData(),
-                              //[
-                               //{ 'text' : 'Child 1' },
-                               //'Child 2'
-                             //]
+                             "children": this.getPageJsonData(),
                           }
                         ];
-            };
+            }
+        });
+
+        return function (name) {
+            var file = new wrwdFile();
+            file.name = name;
+            file.bind("length", function(event, attr, how, newVal, oldVal) {
+                wrwd.onFileChange(-1, -1, event, attr, how, newVal, oldVal);
+            });
+
             return file;
         };
     }();
 
     wrwd.setFile = function (f) {
         this.file = f;
-        this.dealWithFileChange(-1, -1, this.deal_with_type.add, true);
+        can.trigger(this.file, "length");
     }
 
-    wrwd.getFileJsonData = function (){
-        return function () {
-            if (typeof(this.file) != "undefined") {
-                return this.file.getJsonData();
-            }
-            else {
-                return [];
-            //return ['Simple root node',
-            //               {
-            //                 'text' : 'Root node 2',
-            //                 'state' : {
-            //                   'opened' : true,
-            //                   'selected' : true
-            //                 },
-            //                 'children' : [
-            //                   { 'text' : 'Child 1' },
-            //                   'Child 2'
-            //                 ]
-            //              }
-            //            ];
-            }
-        };
-    }();
+    wrwd.getFileJsonData = function () {
+        if (typeof(this.file) != "undefined") {
+            return this.file.getJsonData();
+        }
+        else {
+            return [];
+        //return ['Simple root node',
+        //               {
+        //                 'text' : 'Root node 2',
+        //                 'state' : {
+        //                   'opened' : true,
+        //                   'selected' : true
+        //                 },
+        //                 'children' : [
+        //                   { 'text' : 'Child 1' },
+        //                   'Child 2'
+        //                 ]
+        //              }
+        //            ];
+        }
+    };
 
     wrwd.readline = ace.edit("rwd_readline");
     wrwd.readline.setHighlightActiveLine(false);
