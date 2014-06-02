@@ -10,7 +10,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details <http://www.gnu.org/licenses/>.
-
+"use strict";
 requirejs.config({
 	paths: {
         requirejs: "require",
@@ -18,10 +18,10 @@ requirejs.config({
 		jquery_layout: "jquery.layout-1.3.0.min",
         jstree: "jstree/jstree.min",
         ace: "ace/ace",
+        can: "amd/can",
         sprintf: "sprintf",
         getopt: "getopt",
-        wrwd: "wrwd",
-		can: "amd/can"
+        wrwd: "wrwd"
 	},
     shim: {
         wrwd: {
@@ -35,14 +35,12 @@ requirejs.config({
         },
         ace: {
             deps: ["jquery"],
-            exports: 'ace',
         },
     }
 });
 
-
-requirejs(["jquery", "wrwd"],
-	function ($, wrwd) {
+requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "sprintf", "getopt", "wrwd"],
+	function ($, jquery_layout, jstree, ace, can, __ph, getopt, wrwd) {
 		// Setup 'shift + >' hotkey
         var shiftDown = false;
         $(window).keydown(function (k) {

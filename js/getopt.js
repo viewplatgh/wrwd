@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+"use strict";
 define(function (requirejs){
     var ASSERT = function (v) {
         if (!v) {
