@@ -1,3 +1,5 @@
+// cd .. && node tools/r.js -o tools/build.js to build
+
 {
     appDir: '../www',
     baseUrl: 'js',
