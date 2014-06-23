@@ -14,9 +14,9 @@
 requirejs.config({
 	paths: {
         requirejs: "require",
-		jquery: "jquery-1.9.1.min",
-		jquery_layout: "jquery.layout-1.3.0.min",
-        jstree: "jstree/jstree.min",
+		jquery: "jquery-1.9.1",
+		jquery_layout: "jquery.layout-1.3.0",
+        jstree: "jstree/jstree",
         ace: "ace/ace",
         can: "amd/can",
         sprintf: "sprintf",
@@ -39,7 +39,7 @@ requirejs.config({
     }
 });
 
-requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "sprintf", "getopt", "wrwd"],
+requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "sprintf", "getopt", "wrwd", "can/util/object"],
 	function ($, jquery_layout, jstree, ace, can, __ph, getopt, wrwd) {
 		// Setup 'shift + >' hotkey
         var shiftDown = false;

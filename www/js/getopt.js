@@ -307,6 +307,16 @@ define(function (requirejs){
         return ({ option: '?', optopt: chr, error: true });
     };
 
+    goBasicParser.prototype.getoptarg = function ()
+    {
+        if (this.gop_argv.length != 3) {
+            this.output('illegal option');
+            return undefined;
+        }
+        else
+            return this.gop_argv[2];
+    };
+
 
     return goBasicParser;
 });
