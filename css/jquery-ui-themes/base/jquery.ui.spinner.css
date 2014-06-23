@@ -38,13 +38,11 @@
 	overflow: hidden;
 	right: 0;
 }
-/* more specificity required here to overide default borders */
 .ui-spinner a.ui-spinner-button {
 	border-top: none;
 	border-bottom: none;
 	border-right: none;
 }
-/* vertical centre icon */
 .ui-spinner .ui-icon {
 	position: absolute;
 	margin-top: -8px;
@@ -57,9 +55,7 @@
 .ui-spinner-down {
 	bottom: 0;
 }
-
-/* TR overrides */
 .ui-spinner .ui-icon-triangle-1-s {
-	/* need to fix icons sprite */
+	
 	background-position: -65px -16px;
 }

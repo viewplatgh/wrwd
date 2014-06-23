@@ -107,8 +107,6 @@
 .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
 	float: left;
 }
-
-/* with multiple calendars */
 .ui-datepicker.ui-datepicker-multi {
 	width: auto;
 }
@@ -140,8 +138,6 @@
 	width: 100%;
 	font-size: 0;
 }
-
-/* RTL support */
 .ui-datepicker-rtl {
 	direction: rtl;
 }

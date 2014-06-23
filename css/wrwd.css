@@ -1,6 +1,6 @@
-﻿/* customize borders to avoid double-borders around inner-layouts */
+
 .ui-layout-pane {
-	border:			0; /* override layout-default-latest.css */
+	border:			0; 
 	border-top:		1px solid #BBB;
 	border-bottom:	1px solid #BBB;
 }
@@ -19,8 +19,6 @@
 	.inner-center {
 		border:		1px solid #BBB;
 	}
-
-/* add shading to outer sidebar-panes */
 .outer-west ,
 .outer-east {
 	background-color: #EEE;
@@ -29,45 +27,35 @@
 .middle-east {
 	background-color: #F8F8F8;
 }
-
-/* remove padding & scrolling from panes that are 'containers' for nested layouts */
 .outer-center ,
 .middle-center {
-	border:			0; /* cosmetic */
+	border:			0; 
 	padding:		2px;
 	overflow:       auto;
 }
 .middle-south {
-	border:			0; /* cosmetic */
+	border:			0; 
 	padding:		2px;
 	overflow:		hidden;
 }
-
 div.jquery-console-focus span.jquery-console-cursor 
 {
     border: 1px solid black;
 }
-
 span.jquery-console-prompt-label
 {
     margin: 0 5px 0 5px;
 }
-
 span.rwd_prompt
 {
 	margin: 0 3px 0 3px;
 	font: 15px Arial;
 	vertical-align: 50%;
 }
-
 div.wrwd-ouput
 {
     font: Arial;
 }
-
-/*
- *	customize borders on panes/resizers to make pretty
- */
 .ui-layout-pane-west		{ border-right:		0; }
 .ui-layout-resizer-west		{ border-left:		1px solid #BBB; }
 .ui-layout-pane-east		{ border-left:		0; }
@@ -76,14 +64,6 @@ div.wrwd-ouput
 .ui-layout-resizer-north	{ border-top:		1px solid #BBB; }
 .ui-layout-pane-south		{ border-top:		0; }
 .ui-layout-resizer-south	{ border-bottom: 	1px solid #BBB; }
-/*
- *	add borders to resizers when pane is 'closed'
- *
- *.ui-layout-resizer-closed	{ border:			1px solid #BBB; }
- */
-/*
- *	show both borders when the resizer is 'dragging'
- */
 .ui-layout-resizer-west-dragging ,
 .ui-layout-resizer-east-dragging {
 	border-left:		1px solid #BBB;

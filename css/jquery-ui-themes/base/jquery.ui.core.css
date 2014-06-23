@@ -8,9 +8,6 @@
  *
  * http://docs.jquery.com/UI/Theming/API
  */
-
-/* Layout helpers
-----------------------------------*/
 .ui-helper-hidden {
 	display: none;
 }
@@ -44,7 +41,7 @@
 	clear: both;
 }
 .ui-helper-clearfix {
-	min-height: 0; /* support: IE7 */
+	min-height: 0; 
 }
 .ui-helper-zfix {
 	width: 100%;
@@ -55,35 +52,18 @@
 	opacity: 0;
 	filter:Alpha(Opacity=0);
 }
-
 .ui-front {
 	z-index: 100;
 }
-
-
-/* Interaction Cues
-----------------------------------*/
 .ui-state-disabled {
 	cursor: default !important;
 }
-
-
-/* Icons
-----------------------------------*/
-
-/* states and images */
 .ui-icon {
 	display: block;
 	text-indent: -99999px;
 	overflow: hidden;
 	background-repeat: no-repeat;
 }
-
-
-/* Misc visuals
-----------------------------------*/
-
-/* Overlays */
 .ui-widget-overlay {
 	position: fixed;
 	top: 0;
