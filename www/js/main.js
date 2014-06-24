@@ -39,8 +39,8 @@ requirejs.config({
     }
 });
 
-requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "sprintf", "getopt", "wrwd", "can/util/object"],
-	function ($, jquery_layout, jstree, ace, can, __ph, getopt, wrwd) {
+requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "can/util/object", "sprintf", "getopt", "wrwd"],
+	function ($, jquery_layout, jstree, ace, can, co, __ph, getopt, wrwd) {
 		// Setup 'shift + >' hotkey
         var shiftDown = false;
         $(window).keydown(function (k) {

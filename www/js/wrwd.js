@@ -217,8 +217,6 @@ define(function(requirejs){
                 parser = basic_parser("l(license)", "list");
                 option = parser.getopt();
                 if (option === undefined) {
-                    //this.output("<div>usage of rwd:</div> <br/>\
-                    //             <div>&nbsp;auto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extract options ready for autocomplete</div>");
                     this.output("<table><tr><td>usage of rwd:</td><td width=\"30%\"></td></tr>\
                                 <tr><td>auto</td><td></td><td>extract options ready for autocomplete</td></tr>\
                                 <tr><td></td><td>&lt;-l, --load&gt;</td><td>fast autocomplete with first choice</td></tr>\
@@ -243,8 +241,8 @@ define(function(requirejs){
                                 <tr><td></td><td>&lt;-h, --phon&gt; [string]</td><td>phonetic symbols</td></tr>\
                                 <tr><td></td><td>&lt;-s, --source&gt; [string]</td><td>term in source language</td></tr>\
                                 <tr><td></td><td>&lt;-i, --interp&gt; [string]</td><td>interpret in destination language</td></tr>\
-                                <tr><td></td>&lt;-e, --examp&gt; [string]<td></td><td>example</td></tr>\
-                                <tr><td></td>&lt;-r, --rem&gt; [string]<td></td><td>remember type</td></tr>\
+                                <tr><td></td><td>&lt;-e, --examp&gt; [string]</td><td>example</td></tr>\
+                                <tr><td></td><td>&lt;-r, --rem&gt; [string]</td><td>remember type</td></tr>\
                                 <tr><td>next</td><td>&lt;-d, --distance&gt; [num]</td><td>step to next [num] words</td></tr>\
                                 <tr><td>open</td><td>&lt;-f, --file&gt; [string]</td><td>open a file</td></tr>\
                                 <tr><td>plugin</td><td></td><td>show plugin configuration and options</td></tr>\
