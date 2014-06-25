@@ -15,6 +15,7 @@ requirejs.config({
 	paths: {
         requirejs: "require",
 		jquery: "jquery-1.9.1",
+        jquery_ui: "ui/jquery-ui",
 		jquery_layout: "jquery.layout-1.3.0",
         jstree: "jstree/jstree",
         ace: "ace/ace",
@@ -31,7 +32,7 @@ requirejs.config({
             deps: ["jquery_layout"],
         },
         jquery_layout: {
-            deps: ["jquery"],
+            deps: ["jquery", "jquery_ui"],
         },
         ace: {
             deps: ["jquery"],
@@ -39,8 +40,8 @@ requirejs.config({
     }
 });
 
-requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "can/util/object", "sprintf", "getopt", "wrwd"],
-	function ($, jquery_layout, jstree, ace, can, co, __ph, getopt, wrwd) {
+requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/util/object", "sprintf", "getopt", "wrwd"],
+	function ($, jquery_ui, jquery_layout, jstree, ace, can, co, sptf, getopt, wrwd) {
 		// Setup 'shift + >' hotkey
         var shiftDown = false;
         $(window).keydown(function (k) {
@@ -70,26 +71,31 @@ requirejs(["jquery", "jquery_layout", "jstree", "ace", "can", "can/util/object",
 
 
         // Setup layout
-        $('body').layout({
-            center__paneSelector: ".outer-center", // container
-            west__paneSelector: ".outer-west",  // left tree view
-            north__paneSelector: ".outer-north", // website header
-            west__size: 225,
-            north__size: 100,
-            spacing_open: 4,
-            spacing_closed: 6,
-            north__maxSize: 200,
-            center__childOptions: {
-                center__paneSelector: ".middle-center", // ouput console
-                east__paneSelector: ".middle-east", // right list view
-                south__paneSelector: ".middle-south",   // readline/getline console
-                east__size: 225,
-                south__size: 25,
-                south__minSize: 25,
-                spacing_open: 4,
-                spacing_closed: 6
-            }
-        });
+        var wly = $('body').layout({
+                    center__paneSelector: ".outer-center", // container
+                    west__paneSelector: ".outer-west",  // left tree view
+                    north__paneSelector: ".outer-north", // website header
+                    west__size: 225,
+                    north__size: 100,
+                    spacing_open: 4,
+                    spacing_closed: 6,
+                    north__maxSize: 200,
+                    center__childOptions: {
+                        center__paneSelector: ".middle-center", // ouput console
+                        east__paneSelector: ".middle-east", // right list view
+                        south__paneSelector: ".middle-south",   // readline/getline console
+                        east__size: 225,
+                        south__size: 25,
+                        south__minSize: 25,
+                        spacing_open: 4,
+                        spacing_closed: 6
+                    }
+                });
+
+        //wly.addPinBtn(".outer-west", "west");
+        $("<span></span>").attr("id", "outer-west-closer").prependTo(".outer-west");
+        wly.addCloseBtn("#outer-west-closer", "west");
+
        $("#outer_west_jstree").jstree({
                                         "core": {
                                            "themes": {
