@@ -709,3 +709,21 @@ define(function(requirejs){
 
     return wrwd;
 });
+
+
+    //  <div class="outer-north"><!--website header--></div>
+    // <div class="outer-west"><!--left tree view-->
+    //     <div class="ui-widget-header">TTT</div>
+    //     <div class="ui-widget-conent">
+    //         <div id="outer_west_jstree"></div>
+    //     </div>
+    // </div>
+    // <div class="outer-center">
+    //     <div class="middle-center"><!--output console--></div>
+    //     <div class="middle-east"><!--right list view--></div>
+    //     <div class="middle-south"><!--readline console-->
+    //         <table style="width:100%;border:0px;margin:0px;">    
+    //             <tr><td style="width:10px"><span class="rwd_prompt">&gt;</span></td><td><pre id="rwd_readline"></pre></td></tr>
+    //         </table>
+    //     </div>
+    // </div>
