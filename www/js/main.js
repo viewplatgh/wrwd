@@ -231,9 +231,9 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
     * Pane-specific settings go inside their keys: north:{}, south:{}, center:{}, etc
     */
     var layoutSettings = {
-        name: "wrwdLayout" // NO FUNCTIONAL USE, but could be used by custom code to 'identify' a layout
+        name: "wrwdLayout", // NO FUNCTIONAL USE, but could be used by custom code to 'identify' a layout
             // options.defaults apply to ALL PANES - but overridden by pane-specific settings
-        , defaults: {
+        defaults: {
             size: "auto"
             , minSize: 50
             , paneClass: "pane"         // default = 'ui-layout-pane'
@@ -249,13 +249,13 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
             , togglerTip_closed: "Open This Pane"
             , resizerTip: "Resize This Pane"
             //  effect defaults - overridden on some panes
-            , fxName: "slide"       // none, slide, drop, scale
+            , fxName: "none"       // none, slide, drop, scale
             , fxSpeed_open: 750
             , fxSpeed_close: 1500
             , fxSettings_open: { easing: "easeInQuint" }
             , fxSettings_close: { easing: "easeOutQuint" }
-        }
-        , north: {
+        },
+        north: {
             spacing_open: 1         // cosmetic spacing
             , togglerLength_open: 0         // HIDE the toggler button
             , togglerLength_closed: -1          // "100%" OR -1 = full width of pane
@@ -263,25 +263,25 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
             , slidable: false
             //  override default effect
             , fxName: "none"
-        }
-        , south: {
-            maxSize: 200
-            , spacing_closed: 0         // HIDE resizer & toggler when 'closed'
-            , slidable: false       // REFERENCE - cannot slide if spacing_closed = 0
-            , initClosed: true
-            //  CALLBACK TESTING...
-            , onhide_start: function () { return confirm("START South pane hide \n\n onhide_start callback \n\n Allow pane to hide?"); }
-            , onhide_end: function () { alert("END South pane hide \n\n onhide_end callback"); }
-            , onshow_start: function () { return confirm("START South pane show \n\n onshow_start callback \n\n Allow pane to show?"); }
-            , onshow_end: function () { alert("END South pane show \n\n onshow_end callback"); }
-            , onopen_start: function () { return confirm("START South pane open \n\n onopen_start callback \n\n Allow pane to open?"); }
-            , onopen_end: function () { alert("END South pane open \n\n onopen_end callback"); }
-            , onclose_start: function () { return confirm("START South pane close \n\n onclose_start callback \n\n Allow pane to close?"); }
-            , onclose_end: function () { alert("END South pane close \n\n onclose_end callback"); }
-            //, onresize_start:         function () { return confirm("START South pane resize \n\n onresize_start callback \n\n Allow pane to be resized?)"); }
-            , onresize_end: function () { alert("END South pane resize \n\n onresize_end callback \n\n NOTE: onresize_start event was skipped."); }
-        }
-        , west: {
+        },
+        // , south: {
+        //     maxSize: 200
+        //     , spacing_closed: 0         // HIDE resizer & toggler when 'closed'
+        //     , slidable: false       // REFERENCE - cannot slide if spacing_closed = 0
+        //     , initClosed: true
+        //     //  CALLBACK TESTING...
+        //     , onhide_start: function () { return confirm("START South pane hide \n\n onhide_start callback \n\n Allow pane to hide?"); }
+        //     , onhide_end: function () { alert("END South pane hide \n\n onhide_end callback"); }
+        //     , onshow_start: function () { return confirm("START South pane show \n\n onshow_start callback \n\n Allow pane to show?"); }
+        //     , onshow_end: function () { alert("END South pane show \n\n onshow_end callback"); }
+        //     , onopen_start: function () { return confirm("START South pane open \n\n onopen_start callback \n\n Allow pane to open?"); }
+        //     , onopen_end: function () { alert("END South pane open \n\n onopen_end callback"); }
+        //     , onclose_start: function () { return confirm("START South pane close \n\n onclose_start callback \n\n Allow pane to close?"); }
+        //     , onclose_end: function () { alert("END South pane close \n\n onclose_end callback"); }
+        //     //, onresize_start:         function () { return confirm("START South pane resize \n\n onresize_start callback \n\n Allow pane to be resized?)"); }
+        //     , onresize_end: function () { alert("END South pane resize \n\n onresize_end callback \n\n NOTE: onresize_start event was skipped."); }
+        // }
+        west: {
             size: 250
             , spacing_closed: 21            // wider space when closed
             , togglerLength_closed: 21          // make toggler 'square' - 21x21
@@ -291,27 +291,27 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
             , togglerTip_closed: "Open West Pane"
             , resizerTip_open: "Resize West Pane"
             , slideTrigger_open: "click"    // default
-            , initClosed: true
+            , initClosed: false
             //  add 'bounce' option to default 'slide' effect
             , fxSettings_open: { easing: "easeOutBounce" }
-        }
-        , east: {
-            size: 250
-            , spacing_closed: 21            // wider space when closed
-            , togglerLength_closed: 21          // make toggler 'square' - 21x21
-            , togglerAlign_closed: "top"        // align to top of resizer
-            , togglerLength_open: 0             // NONE - using custom togglers INSIDE east-pane
-            , togglerTip_open: "Close East Pane"
-            , togglerTip_closed: "Open East Pane"
-            , resizerTip_open: "Resize East Pane"
-            , slideTrigger_open: "mouseover"
-            , initClosed: true
-            //  override default effect, speed, and settings
-            , fxName: "drop"
-            , fxSpeed: "normal"
-            , fxSettings: { easing: ""} // nullify default easing
-        }
-        , center: {
+        },
+        // , east: {
+        //     size: 250
+        //     , spacing_closed: 21            // wider space when closed
+        //     , togglerLength_closed: 21          // make toggler 'square' - 21x21
+        //     , togglerAlign_closed: "top"        // align to top of resizer
+        //     , togglerLength_open: 0             // NONE - using custom togglers INSIDE east-pane
+        //     , togglerTip_open: "Close East Pane"
+        //     , togglerTip_closed: "Open East Pane"
+        //     , resizerTip_open: "Resize East Pane"
+        //     , slideTrigger_open: "mouseover"
+        //     , initClosed: true
+        //     //  override default effect, speed, and settings
+        //     , fxName: "drop"
+        //     , fxSpeed: "normal"
+        //     , fxSettings: { easing: ""} // nullify default easing
+        // }
+        center: {
             paneSelector: "#mainContent"            // sample: use an ID to select pane instead of a class
             , minWidth: 200
             , minHeight: 200
@@ -337,29 +337,29 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
 
         // BIND events to hard-coded buttons in the NORTH toolbar
         outerLayout.addToggleBtn( "#tbarToggleNorth", "north" );
-        outerLayout.addOpenBtn( "#tbarOpenSouth", "south" );
-        outerLayout.addCloseBtn( "#tbarCloseSouth", "south" );
+        //outerLayout.addOpenBtn( "#tbarOpenSouth", "south" );
+        //outerLayout.addCloseBtn( "#tbarCloseSouth", "south" );
         outerLayout.addPinBtn( "#tbarPinWest", "west" );
-        outerLayout.addPinBtn( "#tbarPinEast", "east" );
+        //outerLayout.addPinBtn( "#tbarPinEast", "east" );
 
         // save selector strings to vars so we don't have to repeat it
         // must prefix paneClass with "body > " to target ONLY the outerLayout panes
         var westSelector = "body > .ui-layout-west"; // outer-west pane
-        var eastSelector = "body > .ui-layout-east"; // outer-east pane
+        //var eastSelector = "body > .ui-layout-east"; // outer-east pane
 
-         // CREATE SPANs for pin-buttons - using a generic class as identifiers
-        $("<span></span>").addClass("pin-button").prependTo( westSelector );
-        $("<span></span>").addClass("pin-button").prependTo( eastSelector );
+        // CREATE SPANs for pin-buttons - using a generic class as identifiers
+        //$("<span></span>").addClass("pin-button").prependTo( westSelector );
+        //$("<span></span>").addClass("pin-button").prependTo( eastSelector );
         // BIND events to pin-buttons to make them functional
-        outerLayout.addPinBtn( westSelector +" .pin-button", "west");
-        outerLayout.addPinBtn( eastSelector +" .pin-button", "east" );
+        //outerLayout.addPinBtn( westSelector +" .pin-button", "west");
+        //outerLayout.addPinBtn( eastSelector +" .pin-button", "east" );
 
          // CREATE SPANs for close-buttons - using unique IDs as identifiers
         $("<span></span>").attr("id", "west-closer" ).prependTo( westSelector );
-        $("<span></span>").attr("id", "east-closer").prependTo( eastSelector );
+        //$("<span></span>").attr("id", "east-closer").prependTo( eastSelector );
         // BIND layout events to close-buttons to make them functional
         outerLayout.addCloseBtn("#west-closer", "west");
-        outerLayout.addCloseBtn("#east-closer", "east");
+        //outerLayout.addCloseBtn("#east-closer", "east");
 
 
         /* Create the INNER LAYOUT - nested inside the 'center pane' of the outer layout

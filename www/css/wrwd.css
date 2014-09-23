@@ -310,8 +310,8 @@ span.button-close {
 	display:	block;
 	cursor: 	pointer;
 }
-span.button-close-west	{ left:	 0; }
-span.button-close-east	{ right: 0; }
+span.button-close-west	{ right: 1px; }
+span.button-close-east	{ left: 1px; }
 span.button-pin-west	{ right: 1px; }
 span.button-pin-east	{ left:	 1px; }
 
