@@ -179,9 +179,9 @@ function createInnerLayout () {
     //debugData( layoutSettings_Inner );
     innerLayout = $( outerLayout.options.center.paneSelector ).layout( layoutSettings_Inner );
     // hide 'Create Inner Layout' commands and show the list of testing commands
-    $('#createInner').hide();
-    $('#createInner2').hide();
-    $('#innerCommands').show();
+    // $('#createInner').hide();
+    // $('#createInner2').hide();
+    // $('#innerCommands').show();
 }
 
 requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/util/object", "sprintf", "getopt", "wrwd"],
@@ -204,18 +204,18 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
     ,   south__spacing_closed:          8
     ,   north__togglerLength_closed:    -1 // = 100% - so cannot 'slide open'
     ,   south__togglerLength_closed:    -1
-    ,   fxName:                         "slide" // do not confuse with "slidable" option!
-    ,   fxSpeed_open:                   1000
-    ,   fxSpeed_close:                  2500
-    ,   fxSettings_open:                { easing: "easeInQuint" }
-    ,   fxSettings_close:               { easing: "easeOutQuint" }
-    ,   north__fxName:                  "none"
-    ,   south__fxName:                  "drop"
-    ,   south__fxSpeed_open:            500
-    ,   south__fxSpeed_close:           1000
-    //, initClosed:                     true
-    ,   center__minWidth:               200
-    ,   center__minHeight:              200
+    // ,   fxName:                         "none" // do not confuse with "slidable" option!
+    // ,   fxSpeed_open:                   1000
+    // ,   fxSpeed_close:                  2500
+    // ,   fxSettings_open:                { easing: "easeInQuint" }
+    // ,   fxSettings_close:               { easing: "easeOutQuint" }
+    // ,   north__fxName:                  "none"
+    // ,   south__fxName:                  "none"
+    // ,   south__fxSpeed_open:            500
+    // ,   south__fxSpeed_close:           1000
+    ,   initClosed:                     false
+    // ,   center__minWidth:               200
+    // ,   center__minHeight:              200
     };
 
     /*
@@ -250,10 +250,10 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
             , resizerTip: "Resize This Pane"
             //  effect defaults - overridden on some panes
             , fxName: "none"       // none, slide, drop, scale
-            , fxSpeed_open: 750
-            , fxSpeed_close: 1500
-            , fxSettings_open: { easing: "easeInQuint" }
-            , fxSettings_close: { easing: "easeOutQuint" }
+            // , fxSpeed_open: 750
+            // , fxSpeed_close: 1500
+            // , fxSettings_open: { easing: "easeInQuint" }
+            // , fxSettings_close: { easing: "easeOutQuint" }
         },
         north: {
             spacing_open: 1         // cosmetic spacing
@@ -313,8 +313,8 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
         // }
         center: {
             paneSelector: "#mainContent"            // sample: use an ID to select pane instead of a class
-            , minWidth: 200
-            , minHeight: 200
+            // , minWidth: 200
+            // , minHeight: 200
         }
         };
 
@@ -372,12 +372,12 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
          */
 
 
-        // DEMO HELPER: prevent hyperlinks from reloading page when a 'base.href' is set
-        $("a").each(function () {
-            var path = document.location.href;
-            if (path.substr(path.length-1)=="#") path = path.substr(0,path.length-1);
-            if (this.href.substr(this.href.length-1) == "#") this.href = path +"#";
-        });
+        // // DEMO HELPER: prevent hyperlinks from reloading page when a 'base.href' is set
+        // $("a").each(function () {
+        //     var path = document.location.href;
+        //     if (path.substr(path.length-1)=="#") path = path.substr(0,path.length-1);
+        //     if (this.href.substr(this.href.length-1) == "#") this.href = path +"#";
+        // });
 
 
 
