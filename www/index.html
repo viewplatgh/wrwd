@@ -3,8 +3,9 @@
 <head>
     <title>RWD web edition</title>
     <!--<link rel="stylesheet" href="css/bootstrap.min.css"> TODO: Not sure why this doesn't work-->
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"> -->
     <!--<link rel="stylesheet" href="css/jquery-ui-themes/dark-hive/jquery.ui.all.css"/>-->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/jquery.layout-1.3.0.css"/>
     <link rel="stylesheet" href="css/jstree/themes/default/style.css"/>
     <link rel="stylesheet" href="css/wrwd.css"/>
@@ -75,14 +76,14 @@
 <!--     <div class="header">Outer - North</div>
     <div class="content">
     </div> -->
-    <div class="content">Readable Writable worDbook</div>
-    <ul class="toolbar">
-        <li id="tbarToggleNorth" class="first"><span></span>Toggle NORTH</li>
+    <div class="content">Readable Writable worDbook web edition (Alpha)</div>
+    <!-- <ul class="toolbar"> -->
+<!--         <li id="tbarToggleNorth" class="first"><span></span>Toggle NORTH</li>
         <li id="tbarOpenSouth"><span></span>Open SOUTH</li>
         <li id="tbarCloseSouth"><span></span>Close SOUTH</li>
         <li id="tbarPinWest"><span></span>Pin/Unpin WEST</li>
-        <li id="tbarPinEast" class="last"><span></span>Pin/Unpin EAST</li>
-    </ul>
+        <li id="tbarPinEast" class="last"><span></span>Pin/Unpin EAST</li> -->
+    <!-- </ul> -->
 </div>
 
 
@@ -94,9 +95,22 @@
     </div>
 
     <div class="ui-layout-south">
-        <table style="width:100%;border:0px;margin:0px;">
-            <tr><td style="width:10px"><span class="rwd_prompt">&gt;</span></td><td><pre id="rwd_readline"></pre></td></tr>
+<!--         <ul style="padding:0px;list-style:none;">
+            <li style="display:inline-block;">
+                <span class="rwd_prompt">&gt;</span>
+            </li>
+            <li style="display:inline-block;">
+                <pre id="rwd_readline"></pre>
+            </li>
+        </ul> -->
+
+        <table style="width:100%;border:0px;margin:0px;padding:0px;">
+            <tr style="padding:0px;margin:0px;">
+                <td style="width:15px;padding:0px;margin:0px;text-align:center;"><span class="fa fa-angle-right"></span></td>
+                <td style="padding:0px;margin:0px;"><pre id="rwd_readline" style="padding:0px;margin:0px;"></pre></td>
+            </tr>
         </table>
+        </ul>
     </div>
     <div class="ui-layout-east"></div>
 

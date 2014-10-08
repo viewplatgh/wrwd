@@ -41,7 +41,9 @@ define(function(requirejs){
     wrwd.output = function (text) {
                         var line = $("<div class=\"wrwd-output\"></div>");
                         line.html(text);
-                        $(".middle-center").append(line);
+                        var out = $("#mainContent > .ui-layout-center > .ui-layout-content");
+                        out.append(line);
+                        out.scrollTop(out.prop("scrollHeight"));
                     };
 
     wrwd.cmdParse = function (line) {
@@ -474,7 +476,7 @@ define(function(requirejs){
         console.log(sprintf("onFileChange called : %d, %d, %s, %s, %s, %s, %s", pgIdx, wdIdx, event, attr, how, newVal, oldVal));
         //console.log(JSON.stringify(this.file.getJsonData()));
         //}}DEBUG
-        $('#outer_west_jstree').jstree(true).refresh();
+        $(".ui-layout-west > .content").jstree(true).refresh();
     };
 
     wrwd.createWord = function () {
@@ -657,7 +659,7 @@ define(function(requirejs){
 
     wrwd.close = function () {
         this.file = undefined;
-        $('#outer_west_jstree').jstree(true).refresh();
+        $(".ui-layout-west > .content").jstree(true).refresh();
     }; 
 
     wrwd.getFileJsonData = function () {
@@ -682,30 +684,30 @@ define(function(requirejs){
         }
     };
 
-    // wrwd.readline = ace.edit("rwd_readline");
-    // wrwd.readline.setHighlightActiveLine(false);
-    // wrwd.readline.setShowPrintMargin(false);
-    // wrwd.readline.renderer.setShowGutter(false);
-    // wrwd.readline.renderer.container.style.overflow = "hidden";
-    // wrwd.readline.renderer.$maxLines = 4;
-    // wrwd.readline.renderer.setHighlightGutterLine(false);
-    // wrwd.readline.renderer.setStyle("ace_one-line");
-    // wrwd.readline.$mouseHandler.$focusWaitTimout = 0;
+    wrwd.readline = ace.edit("rwd_readline");
+    wrwd.readline.setHighlightActiveLine(false);
+    wrwd.readline.setShowPrintMargin(false);
+    wrwd.readline.renderer.setShowGutter(false);
+    wrwd.readline.renderer.container.style.overflow = "hidden";
+    wrwd.readline.renderer.$maxLines = 4;
+    wrwd.readline.renderer.setHighlightGutterLine(false);
+    wrwd.readline.renderer.setStyle("ace_one-line");
+    wrwd.readline.$mouseHandler.$focusWaitTimout = 0;
 
-    // wrwd.readline.setTheme("ace/theme/clouds");
-    // wrwd.readline.setKeyboardHandler("ace/keyboard/vim");
-    // wrwd.readline.commands.addCommand({
-    //                                     name: "parseCmdLine",
-    //                                     bindKey: {win:"Return", mac:"Return", linux:"Return"},
-    //                                     exec: function(readline){
-    //                                         var cmdLine = readline.getSession().getValue();
-    //                                         wrwd.output(cmdLine);
-    //                                         wrwd.cmdParse(cmdLine);
-    //                                         wrwd.readline.selectAll();
-    //                                         wrwd.readline.removeLines();
-    //                                     },
-    //                                     readOnly: false
-    //                                 });
+    wrwd.readline.setTheme("ace/theme/clouds");
+    //wrwd.readline.setKeyboardHandler("ace/keyboard/vim");
+    wrwd.readline.commands.addCommand({
+                                        name: "parseCmdLine",
+                                        bindKey: {win:"Return", mac:"Return", linux:"Return"},
+                                        exec: function(readline){
+                                            var cmdLine = readline.getSession().getValue();
+                                            wrwd.output(cmdLine);
+                                            wrwd.cmdParse(cmdLine);
+                                            wrwd.readline.selectAll();
+                                            wrwd.readline.removeLines();
+                                        },
+                                        readOnly: false
+                                    });
 
     return wrwd;
 });

@@ -104,7 +104,7 @@ table {
 .pane-center {
 	/* show off the inner-layout inside the outer-center-pane*/
 	background-color: #F6F6F6;
-	padding: 15px; /* for outer layout */
+	padding: 5px; /* for outer layout */
 }
 
 /* inner divs inside Outer East/West panes */
@@ -143,9 +143,13 @@ table {
 #mainContent .ui-layout-pane {
 	padding: 10px;
 }
-#mainContent .ui-layout-north ,
-#mainContent .ui-layout-south {
+#mainContent .ui-layout-north {
 	text-align: center;
+}
+#mainContent .ui-layout-south {
+	text-align: left;
+	overflow: hidden !important;
+	padding: 5px 0px 0px !important;
 }
 #mainContent .ui-layout-center {
 	padding: 0 !important; /* inner divs have padding */
@@ -164,9 +168,8 @@ table {
 *	OUTER LAYOUT RESIZERS & TOGGLERS
 */
 
-/* north-pane is not resizable
 .resizer-north-dragging ,
-.resizer-north:hover		{ background: url(../img/resizable-n.gif) repeat-x center; }*/
+.resizer-north:hover		{ background: url(../img/resizable-n.gif) repeat-x center; }
 .resizer-south-dragging ,
 .resizer-south:hover		{ background: url(../img/resizable-s.gif) repeat-x center; }
 	

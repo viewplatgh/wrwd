@@ -174,49 +174,19 @@ function showState (o_Settings, key) {
 /**
 * createInnerLayout
 */
-function createInnerLayout () {
-    // innerLayout is INSIDE the center-pane of the outerLayout
-    //debugData( layoutSettings_Inner );
-    innerLayout = $( outerLayout.options.center.paneSelector ).layout( layoutSettings_Inner );
-    // hide 'Create Inner Layout' commands and show the list of testing commands
-    // $('#createInner').hide();
-    // $('#createInner2').hide();
-    // $('#innerCommands').show();
-}
+// function createInnerLayout () {
+//     // innerLayout is INSIDE the center-pane of the outerLayout
+//     debugData( layoutSettings_Inner );
+//     innerLayout = $( outerLayout.options.center.paneSelector ).layout( layoutSettings_Inner );
+//     hide 'Create Inner Layout' commands and show the list of testing commands
+//     $('#createInner').hide();
+//     $('#createInner2').hide();
+//     $('#innerCommands').show();
+// }
 
 requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/util/object", "sprintf", "getopt", "wrwd"],
 	function ($, jquery_ui, jquery_layout, jstree, ace, can, co, sptf, getopt, wrwd) {
 
-    /*
-    *#######################
-    * INNER LAYOUT SETTINGS
-    *#######################
-    *
-    * These settings are set in 'list format' - no nested data-structures
-    * Default settings are specified with just their name, like: fxName:"slide"
-    * Pane-specific settings are prefixed with the pane name + 2-underscores: north__fxName:"none"
-    */
-    var layoutSettings_Inner = {
-        applyDefaultStyles:             true // basic styling for testing & demo purposes
-    ,   minSize:                        20 // TESTING ONLY
-    ,   spacing_closed:                 14
-    ,   north__spacing_closed:          8
-    ,   south__spacing_closed:          8
-    ,   north__togglerLength_closed:    -1 // = 100% - so cannot 'slide open'
-    ,   south__togglerLength_closed:    -1
-    // ,   fxName:                         "none" // do not confuse with "slidable" option!
-    // ,   fxSpeed_open:                   1000
-    // ,   fxSpeed_close:                  2500
-    // ,   fxSettings_open:                { easing: "easeInQuint" }
-    // ,   fxSettings_close:               { easing: "easeOutQuint" }
-    // ,   north__fxName:                  "none"
-    // ,   south__fxName:                  "none"
-    // ,   south__fxSpeed_open:            500
-    // ,   south__fxSpeed_close:           1000
-    ,   initClosed:                     false
-    // ,   center__minWidth:               200
-    // ,   center__minHeight:              200
-    };
 
     /*
     *#######################
@@ -256,10 +226,12 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
             // , fxSettings_close: { easing: "easeOutQuint" }
         },
         north: {
-            spacing_open: 1         // cosmetic spacing
+            size: 100
+            , maxSize: 200
+            , spacing_open: 5         // cosmetic spacing
             , togglerLength_open: 0         // HIDE the toggler button
             , togglerLength_closed: -1          // "100%" OR -1 = full width of pane
-            , resizable: false
+            , resizable: true
             , slidable: false
             //  override default effect
             , fxName: "none"
@@ -336,10 +308,10 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
          */
 
         // BIND events to hard-coded buttons in the NORTH toolbar
-        outerLayout.addToggleBtn( "#tbarToggleNorth", "north" );
+        //outerLayout.addToggleBtn( "#tbarToggleNorth", "north" );
         //outerLayout.addOpenBtn( "#tbarOpenSouth", "south" );
         //outerLayout.addCloseBtn( "#tbarCloseSouth", "south" );
-        outerLayout.addPinBtn( "#tbarPinWest", "west" );
+        //outerLayout.addPinBtn( "#tbarPinWest", "west" );
         //outerLayout.addPinBtn( "#tbarPinEast", "east" );
 
         // save selector strings to vars so we don't have to repeat it
@@ -362,11 +334,44 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
         //outerLayout.addCloseBtn("#east-closer", "east");
 
 
+        /*
+        *#######################
+        * INNER LAYOUT SETTINGS
+        *#######################
+        *
+        * These settings are set in 'list format' - no nested data-structures
+        * Default settings are specified with just their name, like: fxName:"slide"
+        * Pane-specific settings are prefixed with the pane name + 2-underscores: north__fxName:"none"
+        */
+        var layoutSettings_Inner = {
+            applyDefaultStyles:             true // basic styling for testing & demo purposes
+        ,   minSize:                        20 // TESTING ONLY
+        ,   spacing_closed:                 5
+        ,   north__spacing_closed:          5
+        ,   south__spacing_closed:          5
+        ,   north__togglerLength_closed:    -1 // = 100% - so cannot 'slide open'
+        ,   south__togglerLength_closed:    -1
+        // ,   fxName:                         "none" // do not confuse with "slidable" option!
+        // ,   fxSpeed_open:                   1000
+        // ,   fxSpeed_close:                  2500
+        // ,   fxSettings_open:                { easing: "easeInQuint" }
+        // ,   fxSettings_close:               { easing: "easeOutQuint" }
+        // ,   north__fxName:                  "none"
+        // ,   south__fxName:                  "none"
+        // ,   south__fxSpeed_open:            500
+        // ,   south__fxSpeed_close:           1000
+        ,   south__maxSize: 30
+        ,   south__minSize: 30 
+        ,   initClosed:                     false
+        //,   center__minWidth:               200
+        //,   center__minHeight:              300
+        };
+
         /* Create the INNER LAYOUT - nested inside the 'center pane' of the outer layout
          * Inner Layout is create by createInnerLayout() function - on demand
          *
          */
-        innerLayout = $("div.pane-center").layout( layoutSettings_Inner );
+        innerLayout = $("#mainContent").layout( layoutSettings_Inner );
          /*
          *
          */
@@ -428,67 +433,74 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
         // $("<span></span>").attr("id", "outer-west-closer").prependTo(".outer-west");
         // wly.addCloseBtn("#outer-west-closer", "west");
 
-       // $("#outer_west_jstree").jstree({
-       //                                  "core": {
-       //                                     "themes": {
-       //                                         "name" : "default",
-       //                                         "dots" : false
-       //                                     },
-       //                                     "data" : function (obj, cb) {
-       //                                          cb.call(this, wrwd.getFileJsonData());
-       //                                  	    //cb.call(this, ['Root 1', 'Root 2']);
-       //                                     }
-       //                                  },
-       //                                  lang : {
-       //                                     new_node : "New ...",
-       //                                  },
-       //                                  "types" : {
-       //                                          "#" : {
-       //                                              "valid_children" : ["file"]
-       //                                          },
-       //                                          "file" : {
-       //                                              "icon" : "glyphicon glyphicon-book",
-       //                                              "valid_children" : ["page"]
-       //                                          },
-       //                                          "page" : {
-       //                                              "icon" : "glyphicon glyphicon-file",
-       //                                              "valid_children" : ["word"]
-       //                                          },
-       //                                          "word" : {
-       //                                              "icon" : "glyphicon glyphicon-pencil"
-       //                                          }
-       //                                      },
-       //                                  "plugins" : ["types"]
-       //                                });
+       $(".ui-layout-west > .content").jstree({
+                                        "core": {
+                                           "themes": {
+                                               "name" : "default",
+                                               "dots" : false
+                                           },
+                                           "data" : function (obj, cb) {
+                                                cb.call(this, wrwd.getFileJsonData());
+                                        	    //cb.call(this, ['Root 1', 'Root 2']);
+                                           }
+                                        },
+                                        "lang" : {
+                                           new_node : "New ...",
+                                        },
+                                        "types" : {
+                                                "#" : {
+                                                    "valid_children" : ["file"]
+                                                },
+                                                "file" : {
+                                                    "icon" : "fa fa-book",
+                                                    "valid_children" : ["page"]
+                                                },
+                                                "page" : {
+                                                    "icon" : "fa fa-file",
+                                                    "valid_children" : ["word"]
+                                                },
+                                                "word" : {
+                                                    "icon" : "fa fa-question"
+                                                }
+                                            },
+                                        "plugins" : ["types"]
+                                      });
 
 
 
-        // // Setup 'shift + >' hotkey
-        // var shiftDown = false;
-        // $(window).keydown(function (k) {
-        //     var code = (k.keyCode ? k.keyCode : k.which);
-        //     //console.log(code);
-        //     switch (code) {
-        //         case 16: // shift
-        //             shiftDown = true;
-        //             break;
-        //         case 190: // '>'
-        //             if (shiftDown) {
-        //                 $(".middle-south").click();
-        //                 return false;
-        //             }
-        //             break;
-        //         //case 27: // esc
-        //         //    break; // didn't find a way to blur $(".middle-south")...
-        //         default:
-        //             break;
-        //     }
-        // });
-        // $(window).keyup(function (k) {
-        //     var code = (k.keyCode ? k.keyCode : k.which);
-        //     if (code === 16)
-        //         shiftDown = false;
-        // });
+        // Setup 'shift + >' hotkey
+        var shiftDown = false;
+        $(window).keydown(function (k) {
+            var code = (k.keyCode ? k.keyCode : k.which);
+            //console.log(code);
+            switch (code) {
+                case 16: // shift
+                    shiftDown = true;
+                    break;
+                case 190: // '>'
+                    if (shiftDown) {
+                        wrwd.readline.focus();
+                        return false;
+                    }
+                    break;
+                case 27: // esc
+                //    break; // didn't find a way to blur $(".middle-south")...
+                    wrwd.readline.blur();
+                    //$("#rwd_readline").blur();
+                    // $(window).focus();
+                    // $(window).click();
+                    // $("#mainContent > .ui-layout-center > .ui-layout-content .wrwd-output").focus();
+                    // $("#mainContent > .ui-layout-center > .ui-layout-content .wrwd-output").click();
+                    break;
+                default:
+                    break;
+            }
+        });
+        $(window).keyup(function (k) {
+            var code = (k.keyCode ? k.keyCode : k.which);
+            if (code === 16)
+                shiftDown = false;
+        });
 
         wrwd.output("Welcome to RWD web edition");
         wrwd.output(sprintf("Copyright (c) %s Rob Lao (www.roblao.com)", (new Date()).getFullYear()));
