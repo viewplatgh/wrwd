@@ -484,13 +484,7 @@ requirejs(["jquery", "jquery_ui", "jquery_layout", "jstree", "ace", "can", "can/
                     }
                     break;
                 case 27: // esc
-                //    break; // didn't find a way to blur $(".middle-south")...
-                    wrwd.readline.blur();
-                    //$("#rwd_readline").blur();
-                    // $(window).focus();
-                    // $(window).click();
-                    // $("#mainContent > .ui-layout-center > .ui-layout-content .wrwd-output").focus();
-                    // $("#mainContent > .ui-layout-center > .ui-layout-content .wrwd-output").click();
+                    // did by wrwd.readline.keyBinding.addKeyboardHandler
                     break;
                 default:
                     break;

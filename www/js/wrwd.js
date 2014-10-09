@@ -694,8 +694,16 @@ define(function(requirejs){
     wrwd.readline.renderer.setStyle("ace_one-line");
     wrwd.readline.$mouseHandler.$focusWaitTimout = 0;
 
+    // blur when pressing 'ESC' (but not working in vim mode...)
+    wrwd.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e){
+        if (keyString == "esc" && hashId === 0) {
+            data.editor.blur();
+            return {command: null};
+        }
+    });
+
     wrwd.readline.setTheme("ace/theme/clouds");
-    //wrwd.readline.setKeyboardHandler("ace/keyboard/vim");
+    wrwd.readline.setKeyboardHandler("ace/keyboard/vim");
     wrwd.readline.commands.addCommand({
                                         name: "parseCmdLine",
                                         bindKey: {win:"Return", mac:"Return", linux:"Return"},
