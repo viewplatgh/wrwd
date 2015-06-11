@@ -33,7 +33,8 @@ var defaults = {
   },
   database: {
     // URL to connect to database
-    url: process.env.DBURL || 'mongodb://wrwdbot:Iex3iey4aere@localhost:27017/wrwd_db',
+    // url: process.env.DBURL || 'mongodb://wrwdbot:Iex3iey4aere@localhost:27017/wrwd_db',
+    url: process.env.DBURL || 'mongodb://wrwdbot:Iex3iey4aere@ds043972.mongolab.com:43972/wrwd_db',
     // Mongoose database options
     options: {
       server: {
