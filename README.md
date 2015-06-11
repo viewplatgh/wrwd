@@ -15,7 +15,7 @@ RWD documentation: http://rdwtwdb.sourceforge.net/manual/toc.html
 License
 ====
  RWD web edition
- Copyright (C) 2014  Rob Lao (www.roblao.com)
+ Copyright (C) 2014,2015  Rob Lao (www.roblao.com)
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
