@@ -22,6 +22,14 @@ var taskConfig = function(grunt) {
         'serve:nowatch'
       ]
     },
+    html: {
+      files: [
+        '<%= yeogurt.client %>/templates/**/*.html'
+      ],
+      tasks: [
+        'clean:tmp'
+      ]
+    },
     less: {
       files: ['<%= yeogurt.client %>/styles/**/*.{less,md}'],
       tasks: [
@@ -47,6 +55,12 @@ var taskConfig = function(grunt) {
         'newer:jshint'
       ]
     },
+    handlebars: {
+      files: ['<%= yeogurt.client %>/templates/**/*.hbs'],
+      tasks: [
+        'handlebars:server'
+      ]
+    },
     livereload: {
       options: {
         livereload: true
@@ -55,7 +69,7 @@ var taskConfig = function(grunt) {
         '<%= yeogurt.client %>/*.{ico,png,txt}',
         '<%= yeogurt.client %>/**/*.html',
         '<%= yeogurt.tmp %>/styles/**/*.{css,ttf,otf,woff,svg,eot}',
-        '<%= yeogurt.tmp %>/scripts/**/*.js',
+        '<%= yeogurt.client %>/scripts/**/*.js',
         '<%= yeogurt.tmp %>/templates/**/*.js',
         '<%= yeogurt.client %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
       ]
@@ -78,6 +92,11 @@ var taskConfig = function(grunt) {
   
   // Documentation specific configuration
   var docsConfig = {
+    html: {
+      tasks: [
+        'dashboard:server',
+      ]
+    },
     less: {
       tasks: [
         'styleguide:server'
@@ -87,11 +106,6 @@ var taskConfig = function(grunt) {
       files: [
         'README.md'
       ],
-      tasks: [
-        'jsdoc:server'
-      ]
-    },
-    react: {
       tasks: [
         'jsdoc:server'
       ]

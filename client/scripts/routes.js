@@ -1,84 +1,130 @@
-'use strict';
+define(function(require) {
+  'use strict';
 
-var React = require('react');
-var routeActions = require('./actions/routes');
-var messagesActions = require('./actions/messages');
-var userStore = require('./stores/user');
-var IndexPage = React.createFactory(require('./components/index.jsx'));
-var LoginPage = React.createFactory(require('./components/account/login.jsx'));
-var SignupPage = React.createFactory(require('./components/account/signup.jsx'));
-var ResetPage = React.createFactory(require('./components/account/reset.jsx'));
-var ForgotPage = React.createFactory(require('./components/account/forgot.jsx'));
-var SettingsPage = React.createFactory(require('./components/account/settings.jsx'));
+  var user = require('./models/user');
+  var messages = require('./models/messages');
+  var LoginView = require('./views/account/login');
+  var SignupView = require('./views/account/signup');
+  var ResetView = require('./views/account/reset');
+  var ForgotView = require('./views/account/forgot');
+  var SettingsView = require('./views/account/settings');
+  var DefaultView = require('./views/layouts/default');
+  var IndexView = require('./views/index');
 
-var render = function(Page) {
-  React.render(new Page(), document.getElementById('app-wrapper'));
-};
+  // Handle displaying and cleaning up views
+  var currentView;
+  var render = function(view) {
+    if (currentView) {
+      currentView.close();
+    }
 
-var index = function() {
-  render(IndexPage);
-};
+    currentView = view;
 
-var login = function() {
-  // If user is logged in, redirect to settings page
-  if (userStore.get().loggedIn) {
-    return routeActions.setRoute('/settings');
-  }
+    $('#app-wrapper').html(currentView.render().$el);
+  };
 
-  render(LoginPage);
-};
+  var Router = Backbone.Router.extend({
 
-var signup = function() {
-  // If user is logged in, redirect to settings page
-  if (userStore.get().loggedIn) {
-    return routeActions.setRoute('/settings');
-  }
+    routes: {
+      'login': 'login',
+      'forgot': 'forgot',
+      'reset/:token': 'reset',
+      'signup': 'signup',
+      'settings': 'settings',
+      '': 'index'
+    },
+    index: function() {
+      var homePage = new DefaultView({
+        subviews: {
+          '.content': new IndexView()
+        }
+      });
+      render(homePage);
+    },
 
-  render(SignupPage);
-};
+    login: function() {
+      // If user is logged in, redirect to settings page
+      if (user.get('loggedIn')) {
+        return router.navigate('/settings', {trigger: true});
+      }
+      var loginPage = new DefaultView({
+        subviews: {
+          '.content': new LoginView()
+        }
+      });
+      render(loginPage);
+    },
 
-var reset = function() {
-  // If user is logged in, redirect to settings page
-  if (userStore.get().loggedIn) {
-    return routeActions.setRoute('/settings');
-  }
 
-  render(ResetPage);
-};
+    forgot: function() {
+      // If user is logged in, redirect to settings page
+      if (user.get('loggedIn')) {
+        return router.navigate('/settings', {trigger: true});
+      }
+      // If reset token is invalid or has expired, display error message
+      if (window.location.search === '?error=invalid') {
+        messages.setMessages({
+          errors: [{
+            msg: 'Reset is invalid or has expired.'
+          }]
+        });
+      }
+      var forgotPage = new DefaultView({
+        subviews: {
+          '.content': new ForgotView()
+        }
+      });
+      render(forgotPage);
+    },
 
-var forgot = function() {
-  // If user is logged in, redirect to settings page
-  if (userStore.get().loggedIn) {
-    return routeActions.setRoute('/settings');
-  }
-  // If reset token is invalid or has expired, display error message
-  if (window.location.search === '?error=invalid') {
-    messagesActions.setMessages({
-      errors: [{
-        msg: 'Reset is invalid or has expired.'
-      }]
-    });
-  }
+    reset: function() {
+      // If user is logged in, redirect to settings page
+      if (user.get('loggedIn')) {
+        return router.navigate('/settings', {trigger: true});
+      }
+      var resetPage = new DefaultView({
+        subviews: {
+          '.content': new ResetView()
+        }
+      });
+      render(resetPage);
+    },
 
-  render(ForgotPage);
-};
+    signup: function() {
+      // If user is logged in, redirect to settings page
+      if (user.get('loggedIn')) {
+        return router.navigate('/settings', {trigger: true});
+      }
+      var signupPage = new DefaultView({
+        subviews: {
+          '.content': new SignupView()
+        }
+      });
+      render(signupPage);
+    },
 
-var settings = function() {
-  // If user is not logged in, redirect to login page
-  if (!userStore.get().loggedIn) {
-    return routeActions.setRoute('/login');
-  }
+    settings: function() {
+      // If user is not logged in, redirect to login page
+      if (!user.get('loggedIn')) {
+        return router.navigate('/login', {trigger: true});
+      }
+      var settingsPage = new DefaultView({
+        subviews: {
+          '.content': new SettingsView()
+        }
+      });
+      render(settingsPage);
+    },
 
-  render(SettingsPage);
-};
+    // Runs before every route loads
+    execute: function(callback, args) {
+      // Clear out any global messages
+      messages.clear();
+      if (callback) {
+        callback.apply(this, args);
+      }
+    }
+  });
 
-var routes = {
-  '/login': login,
-  '/forgot': forgot,
-  '/reset/:token': reset,
-  '/signup': signup,
-  '/settings': settings,
-  '/': index
-};
-
-module.exports = routes;
+  return new Router();
+});

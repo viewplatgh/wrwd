@@ -22,9 +22,12 @@ var taskConfig = function(grunt) {
           'bower_components/html5shiv/',
           'bower_components/consolelog/',
           'bower_components/modernizr/',
-          'bower_components/es5-shim/'
+          'bower_components/requirejs/'
         ],
         overrides: {
+          'handlebars': {
+            'main': 'handlebars.runtime.js'
+          }
         }
       },
       src: [

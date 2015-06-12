@@ -22,7 +22,7 @@ var taskConfig = function(grunt) {
       'copy:server',
       'injector',
       'wiredep',
-      'browserify:server',
+      'handlebars:server',
       'less:server',
       'styleguide:server',
       'jsdoc:server',

@@ -49,6 +49,11 @@
     "$": true,
     "Modernizr": true,
     "jQuery": true,
+    "requirejs": true,
+    "Backbone": true,
+    "app": true,
+    "_": true,
+    "JST": true,
     "__dirname": true
   },
   "indent": 2

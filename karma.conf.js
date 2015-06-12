@@ -12,12 +12,31 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/helpers/phantomjs-shims.js',
-      'test/scripts/bundle.js'
+      'client/bower_components/jquery/dist/jquery.js',
+      'client/bower_components/underscore/underscore.js',
+      'client/bower_components/backbone/backbone.js',
+      'client/bower_components/jquery.cookie/jquery.cookie.js',
+      'client/bower_components/handlebars/handlebars.runtime.js',
+      'test/scripts/templates.js',
+      {
+        pattern: 'client/bower_components/**/*.js',
+        included: false
+      }, {
+        pattern: 'client/scripts/**/*.js',
+        included: false
+      }, {
+        pattern: 'test/**/*.spec.js',
+        included: false
+      },
+      'node_modules/requirejs/require.js',
+      'node_modules/karma-requirejs/lib/adapter.js',
+      'test/test-main.js',
     ],
 
     // list of files to exclude
-    exclude: [],
+    exclude: [
+      'client/scripts/main.js'
+    ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'

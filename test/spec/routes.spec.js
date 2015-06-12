@@ -3,15 +3,17 @@
 */
 
 
-'use strict';
+define(function(require) {
+  'use strict';
 
-var routes = require('../../client/scripts/routes');
+  var router = require('client/scripts/routes');
 
-describe('Routes for router', function() {
+  describe('Router', function() {
 
-  it('provides the "Router" instance', function() {
-    // Expect it to exist
-    expect(routes).to.be.ok;
+    it('provides the "Router" instance', function() {
+      // Expect it to exist
+      expect(router).to.be.ok;
+    });
+
   });
-
 });

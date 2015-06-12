@@ -10,7 +10,8 @@ var taskConfig = function(grunt) {
     ],
     compile: [
       'less:dist',
-      'browserify:dist'
+      'handlebars:dist',
+      'requirejs'
     ],
     docs: [
       'jsdoc:dist',

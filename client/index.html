@@ -11,7 +11,7 @@
 
     <!-- build:css(client) styles/global.css -->
       <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
+      <link rel="stylesheet" href="/bower_components/normalize.css/normalize.css" />
       <!-- endbower -->
     <!-- endbuild -->
 
@@ -37,18 +37,17 @@
     <!-- Application loads here -->
     <div id="app-wrapper" ></div>
 
-    <!-- build:js(client) scripts/lt-ie9.js -->
-    <!--[if lt IE 9]>
-    <script src="/bower_components/es5-shim/es5-shim.js"></script>
-    <script src="/bower_components/es5-shim/es5-sham.js"></script>
-    <![endif]-->
-    <!-- endbuild -->
-
-    <!-- build:js(client) scripts/global.js -->
+    <!-- build:js({client,.tmp}) scripts/global.js -->
       <!-- bower:js -->
+      <script src="/bower_components/jquery/dist/jquery.js"></script>
+      <script src="/bower_components/jquery.cookie/jquery.cookie.js"></script>
+      <script src="/bower_components/underscore/underscore.js"></script>
+      <script src="/bower_components/backbone/backbone.js"></script>
+      <script src="/bower_components/handlebars/handlebars.runtime.js"></script>
       <!-- endbower -->
+    <script src="/templates/templates.js"></script>
     <!-- endbuild -->
 
-    <script src="/scripts/main.js"></script>
+    <script data-main="/scripts/main", src="/bower_components/requirejs/require.js"></script>
   </body>
 </html>

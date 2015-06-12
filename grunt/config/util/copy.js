@@ -21,6 +21,7 @@ var taskConfig = function(grunt) {
         cwd: '<%= yeogurt.client %>/',
         dest: '<%= yeogurt.dist %>/client/',
         src: [
+          'bower_components/requirejs/require.js',
           'styles/styleguide.md',
           'docs/styleguide/public/images',
           'styles/fonts/**/*.{woff,otf,ttf,eot,svg}',
