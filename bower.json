@@ -16,7 +16,8 @@
     "jquery-layout": "1.4.3",
     "jquery-ui": "1.10.3",
     "jstree": "3.1.1",
-    "sprintf": "1.0.2"
+    "sprintf": "1.0.2",
+    "font-awesome-css": "~4.0.3"
   },
   "devDependencies": {}
 }
