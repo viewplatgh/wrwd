@@ -2,7 +2,31 @@
 
 // RequireJS configuration
 require.config({
-  paths: {}
+  paths: {
+    jquery: '../bower_components/jquery/jquery',
+    jquery_ui: '../bower_components/jquery-ui/ui/jquery-ui',
+    jquery_layout: '../bower_components/jquery-layout/source/stable/jquery.layout_and_plugins',
+    jstree: '../bower_components/jstree/dist/jstree',
+    ace: '../bower_components/ace-builds/src/ace',
+    can: '../bower_components/canjs/amd/can',
+    sprintf: '../bower_components/sprintf/src/sprintf',
+    getopt: 'getopt',
+    wrwd: 'wrwd'
+  },
+  shim: {
+    wrwd: {
+      deps: ['jstree', 'ace', 'sprintf', 'getopt', 'can'],
+    },
+    jstree: {
+      deps: ['jquery_layout'],
+    },
+    jquery_layout: {
+      deps: ['jquery', 'jquery_ui'],
+    },
+    ace: {
+      deps: ['jquery'],
+    },
+  }
 });
 
 define('init', function(require) {
@@ -92,7 +116,7 @@ define('init', function(require) {
 
   });
 
-  console.log('Welcome to Yeogurt');
+  console.log('Backbone initialization finished!');
 });
 
 // Initialize the application.

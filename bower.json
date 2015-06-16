@@ -11,13 +11,13 @@
     "backbone": "~1.1.2",
     "handlebars": "~2.0.0",
     "requirejs": "~2.1.11",
-    "ace": "1.1.9",
     "canjs": "2.2.6",
-    "jquery-layout": "1.4.3",
     "jquery-ui": "1.10.3",
     "jstree": "3.1.1",
     "sprintf": "1.0.2",
-    "font-awesome-css": "~4.0.3"
+    "font-awesome-css": "~4.0.3",
+    "ace-builds": "~1.1.9",
+    "jquery-layout": "~1.4.3"
   },
   "devDependencies": {}
 }
