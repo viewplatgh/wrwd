@@ -11,10 +11,6 @@ define(function() {
 
     initialize: function() {
       this.render();
-    },
-
-    render: function() {
-      this.$el.html(this.template);
       require(
         [
           'jquery',
@@ -341,9 +337,12 @@ define(function() {
             wrwd.output("Welcome to RWD web edition");
             wrwd.output(window.sprintf("Copyright (c) %s Rob Lao (www.roblao.com)", (new Date()).getFullYear()));
             wrwd.output("type 'help -l' for details.");
-            console.log('WRWD initialization finished!');
         }
       );
+    },
+
+    render: function() {
+      this.$el.html(this.template);
       return this;
     }
 

@@ -15,7 +15,7 @@
 define(function(requirejs){
     var wrwd = ({});
     var $ = requirejs("jquery");
-    var ace = requirejs("ace/ace"); //TODO: Not sure why requirejs("ace") does not work
+    var ace = requirejs("ace/ace");
     var can = requirejs("can");
     var canList = requirejs("can/list");
     var canMap = requirejs("can/map");
@@ -476,7 +476,7 @@ define(function(requirejs){
         console.log(sprintf("onFileChange called : %d, %d, %s, %s, %s, %s, %s", pgIdx, wdIdx, event, attr, how, newVal, oldVal));
         //console.log(JSON.stringify(this.file.getJsonData()));
         //}}DEBUG
-        $(".ui-layout-west > .content").jstree(true).refresh();
+        $(".ui-layout-west > .file-explorer-content").jstree(true).refresh();
     };
 
     wrwd.createWord = function () {
@@ -659,7 +659,7 @@ define(function(requirejs){
 
     wrwd.close = function () {
         this.file = undefined;
-        $(".ui-layout-west > .content").jstree(true).refresh();
+        $(".ui-layout-west > .file-explorer-content").jstree(true).refresh();
     }; 
 
     wrwd.getFileJsonData = function () {
