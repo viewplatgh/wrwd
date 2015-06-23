@@ -13,7 +13,7 @@ var taskConfig = function(grunt) {
 
     if (target === 'dist') {
       return grunt.task.run(['build',
-      'env:all', 'env:prod', 'express:dist', 'open', 'keepalive']);
+      'env:all', 'env:prod', 'express:dist', 'keepalive']);
     }
 
     grunt.task.run([
@@ -35,8 +35,7 @@ var taskConfig = function(grunt) {
 
     grunt.task.run([
       'express:server',
-      'wait',
-      'open'
+      'wait'
     ]);
 
     

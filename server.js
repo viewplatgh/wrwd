@@ -27,6 +27,9 @@ mongoose.connection.on('error', function() {
   throw '✗ MongoDB Connection Error. Please make sure MongoDB is running.'.red;
 });
 
+app.use(express.static(__dirname + '/client'));
+app.use(express.static(__dirname + '/client/styles'));
+
 // Start Express server.
 app.listen(app.get('port'), function() {
   console.log('✔ Express server listening on port '.green + '%d'.blue + ' in '.green + '%s'.blue + ' mode'.green, app.get('port'), app.get('env'));

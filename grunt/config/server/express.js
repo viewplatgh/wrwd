@@ -7,7 +7,7 @@ var taskConfig = function(grunt) {
 
   grunt.config.set('express', {
     options: {
-      port: process.env.PORT || 9010
+      port: process.env.PORT || 8080
     },
     server: {
       options: {

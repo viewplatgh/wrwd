@@ -6,7 +6,7 @@ var taskConfig = function(grunt) {
 
   grunt.config.set('open', {
     server: {
-      url: 'http://localhost:9010/'
+      url: 'http://0.0.0.0:8080/'
     }
   });
 
