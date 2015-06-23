@@ -4,6 +4,7 @@
 require.config({
   paths: {
     jquery: '../bower_components/jquery/jquery',
+    jquery_cookie: '../bower_components/jquery.cookie/jquery.cookie',
     jquery_ui: '../bower_components/jquery-ui/ui/jquery-ui',
     jquery_layout: '../bower_components/jquery-layout/source/stable/jquery.layout_and_plugins',
     jstree: '../bower_components/jstree/dist/jstree',
@@ -15,7 +16,7 @@ require.config({
   },
   shim: {
     wrwd: {
-      deps: ['jstree', 'ace', 'sprintf', 'getopt', 'can'],
+      deps: ['jquery_cookie', 'jstree', 'ace', 'sprintf', 'getopt', 'can'],
     },
     jstree: {
       deps: ['jquery_layout'],
