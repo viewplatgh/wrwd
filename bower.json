@@ -19,5 +19,22 @@
     "jquery-layout": "~1.4.3",
     "jquery": "1.10.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "consolelog": "~2.0.1",
+    "html5shiv": "~3.7.2",
+    "modernizr": "~2.8.1",
+    "normalize.css": "~3.0.1",
+    "jquery.cookie": "~1.4.1",
+    "backbone": "~1.1.2",
+    "handlebars": "~2.0.0",
+    "requirejs": "~2.1.11",
+    "canjs": "2.2.6",
+    "jquery-ui": "1.10.3",
+    "jstree": "3.1.1",
+    "sprintf": "1.0.2",
+    "font-awesome-css": "~4.0.3",
+    "ace-builds": "~1.1.9",
+    "jquery-layout": "~1.4.3",
+    "jquery": "1.10.2"
+  }
 }

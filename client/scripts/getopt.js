@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 "use strict";
-define(function (requirejs){
+(function (window){
     var ASSERT = function (v) {
         if (!v) {
             throw new Error("Assert failure! " + v + " is not true!");
@@ -318,5 +318,5 @@ define(function (requirejs){
     };
 
 
-    return goBasicParser;
-});
+    window.basicParser = goBasicParser;
+})(window);
