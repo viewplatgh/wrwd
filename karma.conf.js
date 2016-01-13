@@ -12,7 +12,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       // bower:js
-      'client/bower_components/jquery/dist/jquery.js',
+      'client/bower_components/jquery/jquery.js',
       'client/bower_components/angular/angular.js',
       'client/bower_components/angular-resource/angular-resource.js',
       'client/bower_components/angular-cookies/angular-cookies.js',
@@ -22,14 +22,14 @@ module.exports = function(config) {
       'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
       'client/bower_components/angular-validation-match/dist/angular-validation-match.min.js',
-      'client/bower_components/canjs/can.jquery.js',
       'client/bower_components/jquery-ui/ui/jquery-ui.js',
       'client/bower_components/jstree/dist/jstree.js',
       'client/bower_components/sprintf/src/sprintf.js',
       'client/bower_components/jquery.cookie/jquery.cookie.js',
+      'client/bower_components/CanJS/can.jquery.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
-      'client/bower_components/ace-builds/src-noconflict/ace.js',
       // endbower
+      'client/bower_components/ace-builds/src-noconflict/ace.js',
       'node_modules/socket.io-client/socket.io.js',
       'client/app/app.js',
       'client/{app,components}/**/*.module.js',
