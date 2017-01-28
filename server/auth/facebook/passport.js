@@ -12,11 +12,9 @@ export function setup(User, config) {
     ]
   },
   function(accessToken, refreshToken, profile, done) {
-    User.findOneAsync({
-      'facebook.id': profile.id
-    })
+    User.findOne({'facebook.id': profile.id}).exec()
       .then(user => {
-        if (user) {
+        if(user) {
           return done(null, user);
         }
 
@@ -27,8 +25,8 @@ export function setup(User, config) {
           provider: 'facebook',
           facebook: profile._json
         });
-        user.saveAsync()
-          .then(user => done(null, user))
+        user.save()
+          .then(savedUser => done(null, savedUser))
           .catch(err => done(err));
       })
       .catch(err => done(err));

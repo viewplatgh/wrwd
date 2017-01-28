@@ -1,9 +1,9 @@
-@import '../bower_components/bootstrap/less/bootstrap.less';
-@import '../bower_components/bootstrap-social/bootstrap-social.less';
-@import '../bower_components/font-awesome/less/font-awesome.less';
+@import '~bootstrap/less/bootstrap.less';
+@import '~bootstrap-social/bootstrap-social.less';
+@import '~font-awesome/less/font-awesome.less';
 
-@icon-font-path: '../bower_components/bootstrap/fonts/';
-@fa-font-path: '../bower_components/font-awesome/fonts';
+@icon-font-path: '/assets/fonts/bootstrap/';
+@fa-font-path: '/assets/fonts/font-awesome/';
 
 /**
  * App-wide Styles
@@ -16,11 +16,11 @@
   padding: 0.2em 0;
 }
 
-// injector
-@import 'admin/admin.less';
-@import 'main/main.less';
-@import '../components/footer/footer.less';
-@import '../components/modal/modal.less';
-@import '../components/oauth-buttons/oauth-buttons.less';
-@import '../components/wrwd/wrwd.less';
-// endinjector
+/* inject:less */
+@import 'admin/admin';
+@import 'main/main';
+@import '../components/footer/footer';
+@import '../components/modal/modal';
+@import '../components/oauth-buttons/oauth-buttons';
+@import '../components/wrwd/wrwd';
+/* endinject */

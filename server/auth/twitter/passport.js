@@ -8,11 +8,12 @@ export function setup(User, config) {
     callbackURL: config.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
-    User.findOneAsync({
-      'twitter.id_str': profile.id
-    })
+    profile._json.id = `${profile._json.id}`;
+    profile.id = `${profile.id}`;
+
+    User.findOne({'twitter.id': profile.id}).exec()
       .then(user => {
-        if (user) {
+        if(user) {
           return done(null, user);
         }
 
@@ -23,8 +24,8 @@ export function setup(User, config) {
           provider: 'twitter',
           twitter: profile._json
         });
-        user.saveAsync()
-          .then(user => done(null, user))
+        user.save()
+          .then(savedUser => done(null, savedUser))
           .catch(err => done(err));
       })
       .catch(err => done(err));

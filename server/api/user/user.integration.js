@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals describe, expect, it, before, after, beforeEach, afterEach */
+
 import app from '../..';
 import User from './user.model';
 import request from 'supertest';
@@ -9,20 +11,20 @@ describe('User API:', function() {
 
   // Clear users before testing
   before(function() {
-    return User.removeAsync().then(function() {
+    return User.remove().then(function() {
       user = new User({
         name: 'Fake User',
         email: 'test@example.com',
         password: 'password'
       });
 
-      return user.saveAsync();
+      return user.save();
     });
   });
 
   // Clear users after testing
   after(function() {
-    return User.removeAsync();
+    return User.remove();
   });
 
   describe('GET /api/users/me', function() {
@@ -46,11 +48,11 @@ describe('User API:', function() {
     it('should respond with a user profile when authenticated', function(done) {
       request(app)
         .get('/api/users/me')
-        .set('authorization', 'Bearer ' + token)
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
-          res.body._id.toString().should.equal(user._id.toString());
+          expect(res.body._id.toString()).to.equal(user._id.toString());
           done();
         });
     });

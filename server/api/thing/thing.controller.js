@@ -3,14 +3,58 @@
  * GET     /api/things              ->  index
  * POST    /api/things              ->  create
  * GET     /api/things/:id          ->  show
- * PUT     /api/things/:id          ->  update
+ * PUT     /api/things/:id          ->  upsert
+ * PATCH   /api/things/:id          ->  patch
  * DELETE  /api/things/:id          ->  destroy
  */
 
 'use strict';
 
-import _ from 'lodash';
-var Thing = require('./thing.model');
+import jsonpatch from 'fast-json-patch';
+import Thing from './thing.model';
+
+function respondWithResult(res, statusCode) {
+  statusCode = statusCode || 200;
+  return function(entity) {
+    if(entity) {
+      return res.status(statusCode).json(entity);
+    }
+    return null;
+  };
+}
+
+function patchUpdates(patches) {
+  return function(entity) {
+    try {
+      jsonpatch.apply(entity, patches, /*validate*/ true);
+    } catch(err) {
+      return Promise.reject(err);
+    }
+
+    return entity.save();
+  };
+}
+
+function removeEntity(res) {
+  return function(entity) {
+    if(entity) {
+      return entity.remove()
+        .then(() => {
+          res.status(204).end();
+        });
+    }
+  };
+}
+
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if(!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
+  };
+}
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -19,83 +63,54 @@ function handleError(res, statusCode) {
   };
 }
 
-function responseWithResult(res, statusCode) {
-  statusCode = statusCode || 200;
-  return function(entity) {
-    if (entity) {
-      res.status(statusCode).json(entity);
-    }
-  };
-}
-
-function handleEntityNotFound(res) {
-  return function(entity) {
-    if (!entity) {
-      res.status(404).end();
-      return null;
-    }
-    return entity;
-  };
-}
-
-function saveUpdates(updates) {
-  return function(entity) {
-    var updated = _.merge(entity, updates);
-    return updated.saveAsync()
-      .spread(updated => {
-        return updated;
-      });
-  };
-}
-
-function removeEntity(res) {
-  return function(entity) {
-    if (entity) {
-      return entity.removeAsync()
-        .then(() => {
-          res.status(204).end();
-        });
-    }
-  };
-}
-
 // Gets a list of Things
 export function index(req, res) {
-  Thing.findAsync()
-    .then(responseWithResult(res))
+  return Thing.find().exec()
+    .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Gets a single Thing from the DB
 export function show(req, res) {
-  Thing.findByIdAsync(req.params.id)
+  return Thing.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
-    .then(responseWithResult(res))
+    .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Creates a new Thing in the DB
 export function create(req, res) {
-  Thing.createAsync(req.body)
-    .then(responseWithResult(res, 201))
+  return Thing.create(req.body)
+    .then(respondWithResult(res, 201))
+    .catch(handleError(res));
+}
+
+// Upserts the given Thing in the DB at the specified ID
+export function upsert(req, res) {
+  if(req.body._id) {
+    delete req.body._id;
+  }
+  return Thing.findOneAndUpdate({_id: req.params.id}, req.body, {new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+
+    .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Updates an existing Thing in the DB
-export function update(req, res) {
-  if (req.body._id) {
+export function patch(req, res) {
+  if(req.body._id) {
     delete req.body._id;
   }
-  Thing.findByIdAsync(req.params.id)
+  return Thing.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
-    .then(responseWithResult(res))
+    .then(patchUpdates(req.body))
+    .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Deletes a Thing from the DB
 export function destroy(req, res) {
-  Thing.findByIdAsync(req.params.id)
+  return Thing.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));

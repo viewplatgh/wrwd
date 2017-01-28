@@ -1,7 +1,5 @@
 'use strict';
-
 import express from 'express';
-import passport from 'passport';
 import config from '../config/environment';
 import User from '../api/user/user.model';
 
@@ -13,9 +11,9 @@ require('./twitter/passport').setup(User, config);
 
 var router = express.Router();
 
-router.use('/local', require('./local'));
-router.use('/facebook', require('./facebook'));
-router.use('/twitter', require('./twitter'));
-router.use('/google', require('./google'));
+router.use('/local', require('./local').default);
+router.use('/facebook', require('./facebook').default);
+router.use('/twitter', require('./twitter').default);
+router.use('/google', require('./google').default);
 
 export default router;

@@ -13,12 +13,14 @@ import http from 'http';
 // Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);
 mongoose.connection.on('error', function(err) {
-  console.error('MongoDB connection error: ' + err);
-  process.exit(-1);
+  console.error(`MongoDB connection error: ${err}`);
+  process.exit(-1); // eslint-disable-line no-process-exit
 });
 
 // Populate databases with sample data
-if (config.seedDB) { require('./config/seed'); }
+if(config.seedDB) {
+  require('./config/seed');
+}
 
 // Setup server
 var app = express();
@@ -27,13 +29,13 @@ var socketio = require('socket.io')(server, {
   serveClient: config.env !== 'production',
   path: '/socket.io-client'
 });
-require('./config/socketio')(socketio);
-require('./config/express')(app);
-require('./routes')(app);
+require('./config/socketio').default(socketio);
+require('./config/express').default(app);
+require('./routes').default(app);
 
 // Start server
 function startServer() {
-  server.listen(config.port, config.ip, function() {
+  app.angularFullstack = server.listen(config.port, config.ip, function() {
     console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   });
 }

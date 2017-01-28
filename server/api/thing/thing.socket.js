@@ -4,16 +4,16 @@
 
 'use strict';
 
-var ThingEvents = require('./thing.events');
+import ThingEvents from './thing.events';
 
 // Model events to emit
 var events = ['save', 'remove'];
 
 export function register(socket) {
   // Bind model events to socket events
-  for (var i = 0, eventsLength = events.length; i < eventsLength; i++) {
+  for(var i = 0, eventsLength = events.length; i < eventsLength; i++) {
     var event = events[i];
-    var listener = createListener('thing:' + event, socket);
+    var listener = createListener(`thing:${event}`, socket);
 
     ThingEvents.on(event, listener);
     socket.on('disconnect', removeListener(event, listener));
