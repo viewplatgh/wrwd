@@ -11,6 +11,13 @@ const uiBootstrap = require('angular-ui-bootstrap');
 // const ngMessages = require('angular-messages');
 // import ngValidationMatch from 'angular-validation-match';
 
+const jQuery = require('jquery');
+(<any>window).jQuery = jQuery;
+
+const jqueryui = require('jqueryui');
+const jqueryLayout = require('../assets/scripts/jquery.layout');
+const jstree = require('jstree');
+const can = require('can');
 
 import {routeConfig} from './app.config';
 
