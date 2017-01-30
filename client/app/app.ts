@@ -23,6 +23,7 @@ import main from './main/main.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
+import wrwd from '../components/wrwd/wrwd.component';
 
 
 import './app.less';
@@ -44,7 +45,8 @@ angular.module('wrwdApp', [
   main,
   constants,
   socket,
-  util
+  util,
+  wrwd
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
