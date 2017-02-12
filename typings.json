@@ -18,6 +18,8 @@
     "sinon-chai": "github:DefinitelyTyped/DefinitelyTyped/sinon-chai/sinon-chai.d.ts#40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
   },
   "globalDependencies": {
-    "jqueryui": "registry:dt/jqueryui#1.11.0+20161214061125"
+    "ace": "registry:dt/ace#0.0.0+20160727012524",
+    "jqueryui": "registry:dt/jqueryui#1.11.0+20161214061125",
+    "jstree": "registry:dt/jstree#3.3.3+20161128184045"
   }
 }

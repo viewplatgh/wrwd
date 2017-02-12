@@ -1,5 +1,8 @@
+/// <reference path="../../../typings/globals/ace/index.d.ts" />
+
 'use strict';
 /* eslint no-sync: 0 */
+import * as wrwd from '../../scripts/wrwd';
 const angular = require('angular');
 
 export class WrwdComponent {
