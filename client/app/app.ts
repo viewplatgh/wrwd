@@ -1,5 +1,18 @@
 'use strict';
 const angular = require('angular');
+const jQuery = require('jquery');
+(<any>window).jQuery = jQuery;
+const jQueryUI = require('jqueryui');
+(<any>window).jQueryUI = jQueryUI;
+const jQueryLayout = require('../assets/scripts/jquery.layout');
+(<any>window).jQueryLayout = jQueryLayout;
+const jstree = require('jstree');
+(<any>window).jstree = jstree;
+const ace = require('brace');
+(<any>window).ace = ace;
+const can = require('can');
+(<any>window).can = can;
+
 // import ngAnimate from 'angular-animate';
 const ngCookies = require('angular-cookies');
 const ngResource = require('angular-resource');
@@ -74,6 +87,6 @@ angular
   .element(document)
   .ready(() => {
     angular.bootstrap(document, ['wrwdApp'], {
-      strictDi: true
+      strictDi: false
     });
   });

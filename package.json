@@ -20,6 +20,7 @@
     "body-parser": "^1.13.3",
     "bootstrap": "~3.3.7",
     "bootstrap-social": "^5.0.0",
+    "brace": "^0.9.1",
     "can": "^3.4.1",
     "composable-middleware": "^0.3.0",
     "connect-mongo": "^1.2.1",

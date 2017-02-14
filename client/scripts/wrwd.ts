@@ -4,10 +4,10 @@
 'use strict';
 /* eslint no-sync: 0 */
 import * as $ from 'jquery';
-// import * as ace from 'ace';
+import * as ace from 'brace';
 // import * as can from 'can';
 // import * as jstree from 'jstree';
-let ace = require('ace');
+// let ace = require('brace');
 let can = require('can');
 let jstree = require('jstree');
 import * as BasicParser from './getopt';
@@ -85,12 +85,14 @@ let canPage = can.List.extend({
   }
 });
 
-
-class Wrwd {
+export class Wrwd {
   static rememberType = { unknown: 0, imaging: 1, known: 2, familiar: 3, impressed: 4 };
   file: any;
 
+  public readline: ace.Editor;
+
   constructor() {
+    this.readline = ace.edit('rwd_readline');
   }
 
   public output(text) {
@@ -102,7 +104,6 @@ class Wrwd {
   }
 
   public cmdParse(line) {
-
   }
 
   public onFileChange(pgIdx, wdIdx, event, attr, how, newVal, oldVal) {
@@ -171,7 +172,4 @@ class Wrwd {
       return [];
     }
   }
-
-
 }
-
