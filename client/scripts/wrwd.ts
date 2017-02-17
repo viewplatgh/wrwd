@@ -9,6 +9,8 @@ import * as ace from 'brace';
 // import * as jstree from 'jstree';
 // let ace = require('brace');
 let can = require('can');
+let canList = require('can-list');
+let canMap = require('can-map');
 let jstree = require('jstree');
 import * as BasicParser from './getopt';
 
@@ -16,13 +18,14 @@ const STR_PAGE_NOT_READY = 'Page not ready. Create a page at first. e.g. new -p'
 const STR_PAGE_NOT_EXIST = 'Page %s does not exist.';
 const STR_FILE_NOT_READY = 'File not ready. Create or open a file at first. e.g. new -f myvo';
 const STR_WORD_NOT_READY = 'Word not ready. Create a work at first. e.g. new -w hello';
+export const rememberType = { unknown: 0, imaging: 1, known: 2, familiar: 3, impressed: 4 };
 
-let canWord = can.Map.extend({
+let canWord = canMap.extend({
   term: '',
   phon: '',
   source: '',
   examp: '',
-  rem: Wrwd.rememberType.unknown,
+  rem: rememberType.unknown,
   json: (i, pgIdx) => {
     return {
       'id' : `word_${this.term}_${i}`,
@@ -59,7 +62,7 @@ let canFile = can.List.extend({
   }
 });
 
-let canPage = can.List.extend({
+let canPage = canList.extend({
   idx: -1,
   insertWord: (pos, wd) => {
   },
@@ -86,13 +89,12 @@ let canPage = can.List.extend({
 });
 
 export class Wrwd {
-  static rememberType = { unknown: 0, imaging: 1, known: 2, familiar: 3, impressed: 4 };
   file: any;
 
   public readline: ace.Editor;
 
   constructor() {
-    this.readline = ace.edit('rwd_readline');
+    // this.readline = ace.edit('rwd_readline');
   }
 
   public output(text) {

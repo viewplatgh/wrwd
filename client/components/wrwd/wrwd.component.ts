@@ -3,8 +3,6 @@
 'use strict';
 /* eslint no-sync: 0 */
 import { Wrwd } from '../../scripts/wrwd';
-let wrwd0 = require('../../scripts/wrwd');
-import * as wrwd1 from '../../scripts/wrwd';
 const angular = require('angular');
 
 
@@ -31,37 +29,37 @@ export class WrwdComponent {
       // let sptf = $window.sprintf;
       let wrwd = new Wrwd();
       // wrwd.readline = ace.edit('rwd_readline');
-      wrwd.readline.setHighlightActiveLine(false);
-      wrwd.readline.setShowPrintMargin(false);
-      wrwd.readline.renderer.setShowGutter(false);
+      // wrwd.readline.setHighlightActiveLine(false);
+      // wrwd.readline.setShowPrintMargin(false);
+      // wrwd.readline.renderer.setShowGutter(false);
       // wrwd.readline.renderer.container.style.overflow = 'hidden';
       // wrwd.readline.renderer.$maxLines = 4;
       // wrwd.readline.renderer.setHighlightGutterLine(false);
-      wrwd.readline.renderer.setStyle('ace_one-line');
+      // wrwd.readline.renderer.setStyle('ace_one-line');
       // wrwd.readline.$mouseHandler.$focusWaitTimout = 0;
 
       // blur when pressing 'ESC' (but not working in vim mode...)
-      wrwd.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e) {
-        if (keyString === 'esc' && hashId === 0) {
-          data.editor.blur();
-          return {command: null};
-        }
-      }, 0);
+      // wrwd.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e) {
+      //   if (keyString === 'esc' && hashId === 0) {
+      //     data.editor.blur();
+      //     return {command: null};
+      //   }
+      // }, 0);
 
-      wrwd.readline.setTheme('ace/theme/clouds');
-      wrwd.readline.setKeyboardHandler('ace/keyboard/vim');
-      wrwd.readline.commands.addCommand({
-        name: 'parseCmdLine',
-        bindKey: {win: 'Return', mac: 'Return', linux: 'Return'},
-        exec: function(readline){
-            let cmdLine = readline.getSession().getValue();
-            wrwd.output(cmdLine);
-            wrwd.cmdParse(cmdLine);
-            wrwd.readline.selectAll();
-            wrwd.readline.removeLines();
-        },
-        readOnly: false
-      });
+      // wrwd.readline.setTheme('ace/theme/clouds');
+      // wrwd.readline.setKeyboardHandler('ace/keyboard/vim');
+      // wrwd.readline.commands.addCommand({
+      //   name: 'parseCmdLine',
+      //   bindKey: {win: 'Return', mac: 'Return', linux: 'Return'},
+      //   exec: function(readline){
+      //       let cmdLine = readline.getSession().getValue();
+      //       wrwd.output(cmdLine);
+      //       wrwd.cmdParse(cmdLine);
+      //       wrwd.readline.selectAll();
+      //       wrwd.readline.removeLines();
+      //   },
+      //   readOnly: false
+      // });
 
       (function ($, jqueryUI, jqueryLayout, jstree, ace, can, co, wrwd) {
         /*
@@ -317,7 +315,7 @@ export class WrwdComponent {
                   "dots" : false
               },
               "data" : function (obj, cb) {
-                  cb.call(this, wrwd.getFileJsonData());
+                  cb.call(this, wrwd.fileJson());
                   //cb.call(this, ['Root 1', 'Root 2']);
               }
           },
@@ -353,7 +351,7 @@ export class WrwdComponent {
               break;
             case 190: // '>'
               if (shiftDown) {
-                  wrwd.readline.focus();
+                  // wrwd.readline.focus();
                   return false;
               }
               break;
