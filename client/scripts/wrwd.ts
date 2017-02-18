@@ -5,6 +5,8 @@
 /* eslint no-sync: 0 */
 import * as $ from 'jquery';
 import * as ace from 'brace';
+require('brace/mode/javascript');
+require('brace/theme/monokai');
 // import * as can from 'can';
 // import * as jstree from 'jstree';
 // let ace = require('brace');
@@ -94,7 +96,41 @@ export class Wrwd {
   public readline: ace.Editor;
 
   constructor() {
-    // this.readline = ace.edit('rwd_readline');
+    this.readline = ace.edit('rwd_readline');
+    this.readline.getSession().setMode('ace/mode/javascript');
+    this.readline.setTheme('ace/theme/monokai');
+
+    this.readline.setHighlightActiveLine(false);
+    this.readline.setShowPrintMargin(false);
+    this.readline.renderer.setShowGutter(false);
+    // this.readline.renderer.container.style.overflow = 'hidden';
+    // this.readline.renderer.$maxLines = 4;
+    // this.readline.renderer.setHighlightGutterLine(false);
+    this.readline.renderer.setStyle('ace_one-line');
+    // this.readline.$mouseHandler.$focusWaitTimout = 0;
+
+    // blur when pressing 'ESC' (but not working in vim mode...)
+    // wrwd.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e) {
+    //   if (keyString === 'esc' && hashId === 0) {
+    //     data.editor.blur();
+    //     return {command: null};
+    //   }
+    // }, 0);
+
+    // wrwd.readline.setTheme('ace/theme/clouds');
+    this.readline.setKeyboardHandler('ace/keyboard/vim');
+    this.readline.commands.addCommand({
+      name: 'parseCmdLine',
+      bindKey: {win: 'Return', mac: 'Return', linux: 'Return'},
+      exec: readline => {
+          let cmdLine = readline.getSession().getValue();
+          this.output(cmdLine);
+          this.cmdParse(cmdLine);
+          this.readline.selectAll();
+          this.readline.removeLines();
+      },
+      readOnly: false
+    });
   }
 
   public output(text) {

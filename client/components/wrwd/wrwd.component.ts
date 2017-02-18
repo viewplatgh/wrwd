@@ -29,6 +29,8 @@ export class WrwdComponent {
       // let sptf = $window.sprintf;
       let wrwd = new Wrwd();
       // wrwd.readline = ace.edit('rwd_readline');
+      // wrwd.readline.getSession().setMode('ace/mode/javascript');
+      // wrwd.readline.setTheme('ace/theme/monokai');
       // wrwd.readline.setHighlightActiveLine(false);
       // wrwd.readline.setShowPrintMargin(false);
       // wrwd.readline.renderer.setShowGutter(false);
