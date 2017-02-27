@@ -38,7 +38,7 @@ let goError = function (msg) {
  * documentation for this object and its public methods is contained in
  * the included README.md.
  */
-export default class BasicParser {
+export class BasicParser {
   private gop_argv: Array<String>;
   private gop_options: any;
   private gop_aliases: any;
