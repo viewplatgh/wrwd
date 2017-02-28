@@ -6,15 +6,17 @@
 import * as $ from 'jquery';
 import * as ace from 'brace';
 import * as sprintf from 'sprintf';
+
+require('jstree');
 require('brace/mode/javascript');
-require('brace/theme/monokai');
+require('brace/theme/clouds');
+require('brace/keybinding/vim');
 // import * as can from 'can';
 // import * as jstree from 'jstree';
 // let ace = require('brace');
 let can = require('can');
 let canList = require('can-list');
 let canMap = require('can-map');
-let jstree = require('jstree');
 import { BasicParser } from './getopt';
 
 const STR_PAGE_NOT_READY = 'Page not ready. Create a page at first. e.g. new -p';
@@ -169,15 +171,15 @@ export class Wrwd {
   constructor() {
     this.readline = ace.edit('rwd_readline');
     this.readline.getSession().setMode('ace/mode/javascript');
-    this.readline.setTheme('ace/theme/monokai');
+    this.readline.setTheme('ace/theme/clouds');
     this.readline.setHighlightActiveLine(false);
     this.readline.setShowPrintMargin(false);
     this.readline.renderer.setShowGutter(false);
-    // this.readline.renderer.container.style.overflow = 'hidden';
-    // this.readline.renderer.$maxLines = 4;
-    // this.readline.renderer.setHighlightGutterLine(false);
+    (<any>this.readline.renderer).container.style.overflow = 'hidden';
+    (<any>this.readline.renderer).$maxLines = 4;
+    (<any>this.readline.renderer).setHighlightGutterLine(false);
     this.readline.renderer.setStyle('ace_one-line');
-    // this.readline.$mouseHandler.$focusWaitTimout = 0;
+    (<any>this.readline).$mouseHandler.$focusWaitTimout = 0;
 
     // blur when pressing 'ESC' (but not working in vim mode...)
     this.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e) {
@@ -187,8 +189,7 @@ export class Wrwd {
       }
     }, 0);
 
-    // wrwd.readline.setTheme('ace/theme/clouds');
-    this.readline.setKeyboardHandler('brace/keyboard/vim');
+    this.readline.setKeyboardHandler('ace/keyboard/vim');
     this.readline.commands.addCommand({
       name: 'parseCmdLine',
       bindKey: {win: 'Return', mac: 'Return', linux: 'Return'},
