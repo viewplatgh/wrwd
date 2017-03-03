@@ -5,7 +5,7 @@
 /* eslint no-sync: 0 */
 import * as $ from 'jquery';
 import * as ace from 'brace';
-import * as sprintf from 'sprintf';
+import * as util from 'util';
 
 require('jstree');
 require('brace/mode/javascript');
@@ -15,8 +15,9 @@ require('brace/keybinding/vim');
 // import * as jstree from 'jstree';
 // let ace = require('brace');
 let can = require('can');
-let canList = require('can-list');
-let canMap = require('can-map');
+let canList = require('can-define/list/list');
+let canMap = require('can-define/map/map');
+let canEvent = require('can-event');
 import { BasicParser } from './getopt';
 
 const STR_PAGE_NOT_READY = 'Page not ready. Create a page at first. e.g. new -p';
@@ -25,13 +26,13 @@ const STR_FILE_NOT_READY = 'File not ready. Create or open a file at first. e.g.
 const STR_WORD_NOT_READY = 'Word not ready. Create a work at first. e.g. new -w hello';
 export const rememberType = { unknown: 0, imaging: 1, known: 2, familiar: 3, impressed: 4 };
 
-let canWord = canMap.extend({
+let canWord = canMap.extend({}, {
   term: '',
   phon: '',
   source: '',
   examp: '',
   rem: rememberType.unknown,
-  json: (i, pgIdx) => {
+  json: function (i, pgIdx) {
     return {
       'id' : `word_${this.term}_${i}`,
       'text': i === pgIdx ? `* ${this.term}` : this.term,
@@ -42,41 +43,41 @@ let canWord = canMap.extend({
 
 let canPage = canList.extend({
   idx: -1,
-  insertWord: (pos, wd) => {
+  insertWord: function (pos, wd) {
     this.idx = pos;
     this.splice(pos, 0, wd);
   },
-  backInsertWord: (wd) => {
+  backInsertWord: function (wd) {
     this.insertWord(this.length, wd);
   },
-  removeWord: (pos) => {
+  removeWord: function (pos) {
     this.splice(pos, 1);
-    if ((pos < this.idx) || (this.idx == this.length)) {
+    if ((pos < this.idx) || (this.idx === this.length)) {
       let oldVal = this.idx;
       -- this.idx;
-      can.trigger(
+      canEvent.trigger(
         this,
         "length",
         ["idx", "change", oldVal, this.idx]
       ); // To update the *
     }    
   },
-  removeIndexWord: () => {
+  removeIndexWord: function () {
     this.removeWord(this.idx);
   },
-  getWord: (pos) => {
+  getWord: function (pos) {
     return this.attr(pos);
   },
-  setWord: (pos, wd) => {
+  setWord: function (pos, wd) {
     this.attr(pos, wd);
   },
-  getIndexWord: () => {
+  getIndexWord: function () {
     return this.getWord(this.idx);
   },
-  setIndexWord: (wd) => {
+  setIndexWord: function (wd) {
     this.setWord(this.idx, wd);
   },
-  editIndexWord: (pseudoWd) => {
+  editIndexWord: function (pseudoWd) {
     let wordProps = ['term', 'phon', 'source', 'examp', 'rem'];
     let idxWd = this.getIndexWord();
 
@@ -86,14 +87,14 @@ let canPage = canList.extend({
         }
     }
   },
-  wordJson: () => {
+  wordJson: function () {
     let json = [];
     for (let i = 0; i < this.length; ++ i) {
       json.push(this.getWord(i).json(i, this.idx));
     }
     return json;
   },
-  json: (i, flIdx) => {
+  json: function (i, flIdx) {
     return {
       "id": `page_${i}`,
       "text": i === flIdx ? `* page ${i}` : `page ${i}`,
@@ -103,56 +104,56 @@ let canPage = canList.extend({
   }
 });
 
-let canFile = can.List.extend({
+let canFile = canList.extend({
   name: '',
   idx: -1,
-  insertPage: (pos, pg) => {
+  insertPage: function (pos, pg) {
     this.idx = pos;
     this.splice(pos, 0, pg);
   },
-  backInsertPage: (pg) => {
+  backInsertPage: function (pg) {
     this.insertPage(this.length, pg);
   },
-  removePage: (pos) => {
+  removePage: function (pos) {
     this.splice(pos, 1);
-    if ((pos < this.idx) || (this.idx == this.length)) {
+    if ((pos < this.idx) || (this.idx === this.length)) {
         let oldVal = this.idx;
         -- this.idx;
-        can.trigger(
+        canEvent.trigger(
           this,
           "length",
           ["idx", "change", oldVal, this.idx]
         ); // To update the *
     }
   },
-  removeIndexPage: () => {
+  removeIndexPage: function () {
     this.removePage(this.idx);
   },
-  browsePage: (pos) => {
+  browsePage: function (pos) {
     let oldVal = this.idx;
     this.idx = pos;
-    can.trigger(this, "length", ["idx", "change", oldVal, pos]);
+    canEvent.trigger(this, "length", ["idx", "change", oldVal, pos]);
   },
-  getPage: (pos) => {
+  getPage: function (pos) {
     return this.attr(pos);
   },
-  getIndexPage: () => {
+  getIndexPage: function () {
     return this.getPage(this.idx);
   },
-  removeIndexWord: () => {
+  removeIndexWord: function () {
     this.getIndexPage().removeIndexWord();
   },
-  backInsertIndexWord: (wd) => {
+  backInsertIndexWord: function (wd) {
     this.getIndexPage().backInsertWord(wd);
   },
-  pageJson: () => {
+  pageJson: function () {
     let jsonData = [];
     for (let i = 0; i < this.length; ++ i) {
         jsonData.push(this.getPage(i).json(i, this.idx));
     }
     return jsonData;
   },
-  json: () => {
+  json: function () {
     return [{
         "id" : this.name,
         "text" : this.name,
@@ -181,6 +182,8 @@ export class Wrwd {
     this.readline.renderer.setStyle('ace_one-line');
     (<any>this.readline).$mouseHandler.$focusWaitTimout = 0;
 
+    let that = this;
+
     // blur when pressing 'ESC' (but not working in vim mode...)
     this.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e) {
       if (keyString === 'esc' && hashId === 0) {
@@ -195,10 +198,10 @@ export class Wrwd {
       bindKey: {win: 'Return', mac: 'Return', linux: 'Return'},
       exec: readline => {
           let cmdLine = readline.getSession().getValue();
-          this.output(cmdLine);
-          this.cmdParse(cmdLine);
-          this.readline.selectAll();
-          this.readline.removeLines();
+          that.output(cmdLine);
+          that.cmdParse(cmdLine);
+          that.readline.selectAll();
+          that.readline.removeLines();
       },
       readOnly: false
     });
@@ -218,11 +221,12 @@ export class Wrwd {
     let parser;
     let optarg;
     let option;
+    let that = this;
     function basic_parser(ops, cmd) {
       argv.shift();
       argv.unshift('');
       argv.unshift(cmd);
-      return new BasicParser(ops, argv, this.output);
+      return new BasicParser(ops, argv, that.output);
     }
     switch (argv[0]) {
       case "auto":
@@ -239,7 +243,7 @@ export class Wrwd {
                   this.file.browsePage(option.optarg);
                 }
                 else {
-                  this.output(sprintf(STR_PAGE_NOT_EXIST, option.optarg));
+                  this.output(util.format(STR_PAGE_NOT_EXIST, option.optarg));
                   this.output(``);
                 }
               }
@@ -257,7 +261,7 @@ export class Wrwd {
         break;
       case "delete":
         parser = basic_parser("p(page)w(word)", "delete");
-        if((option = parser.getopt()) !== undefined) {
+        if ((option = parser.getopt()) !== undefined) {
           if (typeof(this.file) !== "undefined") {
             switch (option.option) {
               case 'p':
@@ -460,18 +464,18 @@ export class Wrwd {
             case 'f':
               if (typeof(this.file) !== "undefined") {
                 for(var i = 0; i < this.file.pageArray.length; ++ i) {
-                  this.output(sprintf("page %d", i));
+                  this.output(util.format("page %d", i));
                 }
               }
               else {
-                this.output(STR_FILE_NOT_READY);                            
+                this.output(STR_FILE_NOT_READY);
               }
               break;
             case 'p':
               if (typeof(this.file) !== "undefined") {
                 if (typeof(this.file.getIndexPage()) !== "undefined") {
                   for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
-                    this.output(sprintf("%s", this.file.getIndexPage().getWord(i).term));
+                    this.output(util.format("%s", this.file.getIndexPage().getWord(i).term));
                   }
                 }
                 else {
@@ -479,7 +483,7 @@ export class Wrwd {
                 }
               }
               else {
-                this.output(STR_FILE_NOT_READY);                            
+                this.output(STR_FILE_NOT_READY);
               }
               break;
             default:
@@ -502,8 +506,7 @@ export class Wrwd {
               if (typeof(this.file) !== "undefined") {
                 var pg = this.createPage();
                 this.file.backInsertPage(pg);
-              }
-              else {
+              } else {
                 this.output(STR_FILE_NOT_READY);
               }
               break;
@@ -511,12 +514,10 @@ export class Wrwd {
               if (typeof(this.file) !== "undefined") {
                 if (typeof(this.file.getIndexPage()) !== "undefined") {
                   nword = this.createWord({term:option.optarg});
-                }
-                else {
+                } else {
                   this.output(STR_PAGE_NOT_READY);
                 }
-              }
-              else {
+              } else {
                 this.output(STR_FILE_NOT_READY);
               }
               break;
@@ -679,7 +680,7 @@ export class Wrwd {
 
   public setFile(f) {
     this.file = f;
-    can.trigger(this.file, 'length');
+    canEvent.trigger(this.file, 'length');
   }
 
   public close() {

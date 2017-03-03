@@ -28,7 +28,6 @@ export class WrwdComponent {
     let can = $window.can;
 
     let co = can.Object;
-    // let sptf = $window.sprintf;
     let wrwd = this.wrwd;
     // wrwd.readline = ace.edit('rwd_readline');
     // wrwd.readline.getSession().setMode('ace/mode/javascript');
