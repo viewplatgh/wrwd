@@ -19,53 +19,11 @@ export class WrwdComponent {
     this.getCurrentUser = Auth.getCurrentUserSync;
 
     this.wrwd = new Wrwd();
+    $window.wrwd = this.wrwd;
 
     let jQuery = $window.jQuery;
-    let jQueryUI = $window.jQueryUI;
-    let jQueryLayout = $window.jQueryLayout;
-    let jstree = $window.jstree;
-    let ace = $window.ace;
-    let can = $window.can;
 
-    let co = can.Object;
-    let wrwd = this.wrwd;
-    // wrwd.readline = ace.edit('rwd_readline');
-    // wrwd.readline.getSession().setMode('ace/mode/javascript');
-    // wrwd.readline.setTheme('ace/theme/monokai');
-    // wrwd.readline.setHighlightActiveLine(false);
-    // wrwd.readline.setShowPrintMargin(false);
-    // wrwd.readline.renderer.setShowGutter(false);
-    // wrwd.readline.renderer.container.style.overflow = 'hidden';
-    // wrwd.readline.renderer.$maxLines = 4;
-    // wrwd.readline.renderer.setHighlightGutterLine(false);
-    // wrwd.readline.renderer.setStyle('ace_one-line');
-    // wrwd.readline.$mouseHandler.$focusWaitTimout = 0;
-
-    // blur when pressing 'ESC' (but not working in vim mode...)
-    // wrwd.readline.keyBinding.addKeyboardHandler(function(data, hashId, keyString, keyCode, e) {
-    //   if (keyString === 'esc' && hashId === 0) {
-    //     data.editor.blur();
-    //     return {command: null};
-    //   }
-    // }, 0);
-
-    // wrwd.readline.setTheme('ace/theme/clouds');
-    // wrwd.readline.setKeyboardHandler('ace/keyboard/vim');
-    // wrwd.readline.commands.addCommand({
-    //   name: 'parseCmdLine',
-    //   bindKey: {win: 'Return', mac: 'Return', linux: 'Return'},
-    //   exec: function(readline){
-    //       let cmdLine = readline.getSession().getValue();
-    //       wrwd.output(cmdLine);
-    //       wrwd.cmdParse(cmdLine);
-    //       wrwd.readline.selectAll();
-    //       wrwd.readline.removeLines();
-    //   },
-    //   readOnly: false
-    // });
-
-
-    (function ($, jqueryUI, jqueryLayout, jstree, ace, can, co, wrwd) {
+    (function ($) {
       /*
       *#######################
       * OUTER LAYOUT SETTINGS
@@ -79,25 +37,25 @@ export class WrwdComponent {
       * Pane-specific settings go inside their keys: north:{}, south:{}, center:{}, etc
       */
       let layoutSettings = {
-        name: "wrwdLayout", // NO FUNCTIONAL USE, but could be used by custom code to 'identify' a layout
+        name: 'wrwdLayout', // NO FUNCTIONAL USE, but could be used by custom code to 'identify' a layout
             // options.defaults apply to ALL PANES - but overridden by pane-specific settings
         defaults: {
-          size: "auto"
+          size: 'auto'
           , minSize: 50
-          , paneClass: "pane"         // default = 'ui-layout-pane'
-          , resizerClass: "resizer"   // default = 'ui-layout-resizer'
-          , togglerClass: "toggler"   // default = 'ui-layout-toggler'
-          , buttonClass: "button" // default = 'ui-layout-button'
-          , contentSelector: ".file-explorer-content"   // inner div to auto-size so only it scrolls, not the entire pane!
-          , contentIgnoreSelector: "span"     // 'paneSelector' for content to 'ignore' when measuring room for content
+          , paneClass: 'pane'         // default = 'ui-layout-pane'
+          , resizerClass: 'resizer'   // default = 'ui-layout-resizer'
+          , togglerClass: 'toggler'   // default = 'ui-layout-toggler'
+          , buttonClass: 'button' // default = 'ui-layout-button'
+          , contentSelector: '.file-explorer-content'   // inner div to auto-size so only it scrolls, not the entire pane!
+          , contentIgnoreSelector: 'span'     // 'paneSelector' for content to 'ignore' when measuring room for content
           , togglerLength_open: 35            // WIDTH of toggler on north/south edges - HEIGHT on east/west edges
           , togglerLength_closed: 35          // "100%" OR -1 = full height
           , hideTogglerOnSlide: true      // hide the toggler when pane is 'slid open'
-          , togglerTip_open: "Close This Pane"
-          , togglerTip_closed: "Open This Pane"
-          , resizerTip: "Resize This Pane"
+          , togglerTip_open: 'Close This Pane'
+          , togglerTip_closed: 'Open This Pane'
+          , resizerTip: 'Resize This Pane'
           //  effect defaults - overridden on some panes
-          , fxName: "none"       // none, slide, drop, scale
+          , fxName: 'none'       // none, slide, drop, scale
           // , fxSpeed_open: 750
           // , fxSpeed_close: 1500
           // , fxSettings_open: { easing: "easeInQuint" }
@@ -112,7 +70,7 @@ export class WrwdComponent {
           , resizable: true
           , slidable: false
           //  override default effect
-          , fxName: "none"
+          , fxName: 'none'
         },
         // , south: {
         //     maxSize: 200
@@ -135,15 +93,15 @@ export class WrwdComponent {
           size: 250
           , spacing_closed: 21            // wider space when closed
           , togglerLength_closed: 21          // make toggler 'square' - 21x21
-          , togglerAlign_closed: "top"        // align to top of resizer
+          , togglerAlign_closed: 'top'        // align to top of resizer
           , togglerLength_open: 0         // NONE - using custom togglers INSIDE west-pane
-          , togglerTip_open: "Close West Pane"
-          , togglerTip_closed: "Open West Pane"
-          , resizerTip_open: "Resize West Pane"
-          , slideTrigger_open: "click"    // default
+          , togglerTip_open: 'Close West Pane'
+          , togglerTip_closed: 'Open West Pane'
+          , resizerTip_open: 'Resize West Pane'
+          , slideTrigger_open: 'click'    // default
           , initClosed: false
           //  add 'bounce' option to default 'slide' effect
-          , fxSettings_open: { easing: "easeOutBounce" }
+          , fxSettings_open: { easing: 'easeOutBounce' }
         },
         // , east: {
         //     size: 250
@@ -162,7 +120,7 @@ export class WrwdComponent {
         //     , fxSettings: { easing: ""} // nullify default easing
         // }
         center: {
-          paneSelector: "#main-content"            // sample: use an ID to select pane instead of a class
+          paneSelector: '#main-content'            // sample: use an ID to select pane instead of a class
           // , minWidth: 200
           // , minHeight: 200
         }
@@ -171,7 +129,7 @@ export class WrwdComponent {
 
       let outerLayout, innerLayout;
       // create the OUTER LAYOUT
-      outerLayout = $(".main-container .content").layout( layoutSettings );
+      outerLayout = $('.main-container .content').layout( layoutSettings );
 
       /*******************************
        ***  CUSTOM LAYOUT BUTTONS  ***
@@ -194,7 +152,7 @@ export class WrwdComponent {
 
       // save selector strings to lets so we don't have to repeat it
       // must prefix paneClass with "body > " to target ONLY the outerLayout panes
-      let westSelector = ".main-container .content > .ui-layout-west"; // outer-west pane
+      let westSelector = '.main-container .content > .ui-layout-west'; // outer-west pane
       //let eastSelector = "body > .ui-layout-east"; // outer-east pane
 
       // CREATE SPANs for pin-buttons - using a generic class as identifiers
@@ -204,8 +162,8 @@ export class WrwdComponent {
       //outerLayout.addPinBtn( westSelector +" .pin-button", "west");
       //outerLayout.addPinBtn( eastSelector +" .pin-button", "east" );
 
-          // CREATE SPANs for close-buttons - using unique IDs as identifiers
-      $("<span></span>").attr("id", "west-closer" ).prependTo( westSelector );
+      // CREATE SPANs for close-buttons - using unique IDs as identifiers
+      $('<span></span>').attr('id', 'west-closer' ).prependTo( westSelector );
       //$("<span></span>").attr("id", "east-closer").prependTo( eastSelector );
       // BIND layout events to close-buttons to make them functional
       //TODO: Uncomment following line if fix 'Type error lang not definded issue'
@@ -250,7 +208,7 @@ export class WrwdComponent {
           * Inner Layout is create by createInnerLayout() function - on demand
           *
           */
-      innerLayout = $("#main-content").layout( layoutSettings_Inner );
+      innerLayout = $('#main-content').layout( layoutSettings_Inner );
           /*
           *
           */
@@ -312,37 +270,37 @@ export class WrwdComponent {
       // $("<span></span>").attr("id", "outer-west-closer").prependTo(".outer-west");
       // wly.addCloseBtn("#outer-west-closer", "west");
 
-      $(".ui-layout-west > .file-explorer-content").jstree({
-        "core": {
-          "themes": {
-            "name" : "default",
-            "dots" : false
+      $('.ui-layout-west > .file-explorer-content').jstree({
+        'core': {
+          'themes': {
+            'name' : 'default',
+            'dots' : false
           },
-          "data" : function (obj, cb) {
+          'data' : function (obj, cb) {
             cb.call(this, wrwd.fileJson());
             //cb.call(this, ['Root 1', 'Root 2']);
           }
         },
-        "lang" : {
-          new_node : "New ...",
+        'lang' : {
+          new_node : 'New ...',
         },
-        "types" : {
-            "#" : {
-              "valid_children" : ["file"]
+        'types' : {
+            '#' : {
+              'valid_children' : ['file']
             },
-            "file" : {
-              "icon" : "fa fa-book",
-              "valid_children" : ["page"]
+            'file' : {
+              'icon' : 'fa fa-book',
+              'valid_children' : ['page']
             },
-            "page" : {
-              "icon" : "fa fa-file",
-              "valid_children" : ["word"]
+            'page' : {
+              'icon' : 'fa fa-file',
+              'valid_children' : ['word']
             },
-            "word" : {
-              "icon" : "fa fa-question"
+            'word' : {
+              'icon' : 'fa fa-battery-0'
             }
           },
-        "plugins" : ["types"]
+        'plugins' : ['types']
       });
 
       // Setup 'shift + >' hotkey
@@ -372,11 +330,11 @@ export class WrwdComponent {
           shiftDown = false;
         }
       });
-    })(jQuery, jQueryUI, jQueryLayout, jstree, ace, can, co, wrwd);
+    })(jQuery);
 
-    wrwd.output("Welcome to RWD web edition");
+    wrwd.output('Welcome to RWD web edition');
     wrwd.output(`Copyright (c) ${(new Date()).getFullYear()} Rob Lao (www.roblao.com)`);
-    wrwd.output("type 'help -l' for details.");
+    wrwd.output('type \'help -l\' for details.');
   }
 }
 

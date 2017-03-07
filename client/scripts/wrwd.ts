@@ -57,10 +57,10 @@ let canPage = canList.extend({
       -- this.idx;
       canEvent.trigger(
         this,
-        "length",
-        ["idx", "change", oldVal, this.idx]
+        'length',
+        ['idx', 'change', oldVal, this.idx]
       ); // To update the *
-    }    
+    }
   },
   removeIndexWord: function () {
     this.removeWord(this.idx);
@@ -96,10 +96,10 @@ let canPage = canList.extend({
   },
   json: function (i, flIdx) {
     return {
-      "id": `page_${i}`,
-      "text": i === flIdx ? `* page ${i}` : `page ${i}`,
-      "children" : this.wordJson(),
-      "type": "page"
+      'id': `page_${i}`,
+      'text': i === flIdx ? `* page ${i}` : `page ${i}`,
+      'children' : this.wordJson(),
+      'type': 'page'
     };
   }
 });
@@ -121,8 +121,8 @@ let canFile = canList.extend({
         -- this.idx;
         canEvent.trigger(
           this,
-          "length",
-          ["idx", "change", oldVal, this.idx]
+          'length',
+          ['idx', 'change', oldVal, this.idx]
         ); // To update the *
     }
   },
@@ -132,7 +132,7 @@ let canFile = canList.extend({
   browsePage: function (pos) {
     let oldVal = this.idx;
     this.idx = pos;
-    canEvent.trigger(this, "length", ["idx", "change", oldVal, pos]);
+    canEvent.trigger(this, 'length', ['idx', 'change', oldVal, pos]);
   },
   getPage: function (pos) {
     return this.attr(pos);
@@ -155,10 +155,10 @@ let canFile = canList.extend({
   },
   json: function () {
     return [{
-        "id" : this.name,
-        "text" : this.name,
-        "type" : "file",
-        "children": this.pageJson(),
+        'id' : this.name,
+        'text' : this.name,
+        'type' : 'file',
+        'children': this.pageJson(),
       }
     ];
   }
@@ -171,7 +171,7 @@ export class Wrwd {
 
   constructor() {
     this.readline = ace.edit('rwd_readline');
-    this.readline.getSession().setMode('ace/mode/javascript');
+    this.readline.getSession().setMode('ace/mode/text');
     this.readline.setTheme('ace/theme/clouds');
     this.readline.setHighlightActiveLine(false);
     this.readline.setShowPrintMargin(false);
@@ -229,25 +229,23 @@ export class Wrwd {
       return new BasicParser(ops, argv, that.output);
     }
     switch (argv[0]) {
-      case "auto":
+      case 'auto':
         //TODO: Implement auto
-        parser = basic_parser("l(load)", "auto");
+        parser = basic_parser('l(load)', 'auto');
         break;
-      case "browse":
-        parser = basic_parser("p:(page)", "browse");
+      case 'browse':
+        parser = basic_parser('p:(page)', 'browse');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
             case 'p':
-              if (typeof(this.file) !== "undefined") {
-                if (typeof(this.file.getPage(option.optarg)) !== "undefined") {
+              if (typeof(this.file) !== 'undefined') {
+                if (typeof(this.file.getPage(option.optarg)) !== 'undefined') {
                   this.file.browsePage(option.optarg);
-                }
-                else {
+                } else {
                   this.output(util.format(STR_PAGE_NOT_EXIST, option.optarg));
                   this.output(``);
                 }
-              }
-              else {
+              } else {
                 this.output(STR_FILE_NOT_READY);
               }
               break;
@@ -256,13 +254,13 @@ export class Wrwd {
           }
         }
         break;
-      case "close":
+      case 'close':
         this.close();
         break;
-      case "delete":
-        parser = basic_parser("p(page)w(word)", "delete");
+      case 'delete':
+        parser = basic_parser('p(page)w(word)', 'delete');
         if ((option = parser.getopt()) !== undefined) {
-          if (typeof(this.file) !== "undefined") {
+          if (typeof(this.file) !== 'undefined') {
             switch (option.option) {
               case 'p':
                 this.file.removeIndexPage();
@@ -270,28 +268,26 @@ export class Wrwd {
               case 'w':
                 if (this.file.length > 0) {
                   this.file.removeIndexWord();
-                }
-                else {
+                } else {
                   this.output(STR_PAGE_NOT_READY);
                 }
                 break;
               default:
                 break;
             }
-          }
-          else {
+          } else {
             this.output(STR_FILE_NOT_READY);
           }
         }
         break;
-      case "edit":
-        parser = basic_parser("w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)", "edit");
+      case 'edit':
+        parser = basic_parser('w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)', 'edit');
 
-        if (typeof(this.file) !== "undefined") {
-          if (typeof(this.file.getIndexPage()) !== "undefined") {
-            if (typeof(this.file.getIndexPage().getIndexWord()) !== "undefined") {
+        if (typeof(this.file) !== 'undefined') {
+          if (typeof(this.file.getIndexPage()) !== 'undefined') {
+            if (typeof(this.file.getIndexPage().getIndexWord()) !== 'undefined') {
               var wd = ({});
-              var oamp = { 'w':"term", 'h':"phon", 's':"source", 'i':"interp", 'e':"examp", 'r':"rem" };
+              var oamp = { 'w': 'term', 'h': 'phon', 's': 'source', 'i': 'interp', 'e': 'examp', 'r': 'rem' };
               while ((option = parser.getopt()) !== undefined) {
                 switch (option.option) {
                   case 'w':
@@ -309,28 +305,25 @@ export class Wrwd {
               if (!can.Object.same(wd, ({}))) {
                 this.file.getIndexPage().editIndexWord(wd);
               }
-            }
-            else {
+            } else {
               this.output(STR_WORD_NOT_READY);
             }
-          }
-          else {
+          } else {
             this.output(STR_PAGE_NOT_READY);
           }
-        }
-        else {
+        } else {
           this.output(STR_FILE_NOT_READY);
-        }                
+        }
         break;
-      case "exit":
+      case 'exit':
         this.close();
         break;
-      case "goto":
-        parser = basic_parser("", "goto");
+      case 'goto':
+        parser = basic_parser('', 'goto');
         optarg = parser.getoptarg();
         //TODO: this.goto
         break;
-      case "help":
+      case 'help':
       // __t("usage of rwd:"),
       //             __t("   auto                                    extract options ready for autocomplete"),
       //             __t("             <-h, --phon> [num]            choose phonetic symbols from options"),
@@ -387,10 +380,10 @@ export class Wrwd {
       //             __t("   undo                                    undo last command"),
       //             __t("   voice     <-w, --word>                  speak word"),
       //             __t("             <-e, --examp>                 speak example")
-        parser = basic_parser("l(license)", "list");
+        parser = basic_parser('l(license)', 'list');
         option = parser.getopt();
         if (option === undefined) {
-          this.output("<table><tr><td>usage of rwd:</td><td width=\"30%\"></td></tr>\
+          this.output('<table><tr><td>usage of rwd:</td><td width=\"30%\"></td></tr>\
             <tr><td>auto</td><td></td><td>extract options ready for autocomplete</td></tr>\
             <tr><td></td><td>&lt;-l, --load&gt;</td><td>fast autocomplete with first choice</td></tr>\
             <tr><td>browse</td><td>&lt;-p, --page&gt; [num]</td><td>browse a page after open a file</td></tr>\
@@ -441,48 +434,44 @@ export class Wrwd {
             <tr><td></td><td>undo</td><td>undo last command</td></tr>\
             <tr><td>voice</td><td>&lt;-w, --word&gt;</td><td>speak word</td></tr>\
             <tr><td></td><td>&lt;-e, --examp&gt;</td><td>speak example</td></tr>\
-            </table>");
-          }
-          else {
+            </table>');
+          } else {
             if (option.option === 'l') {
-              this.output("This program is free software: you can redistribute it and/or modify");
-              this.output("it under the terms of the GNU General Public License as published by");
-              this.output("the Free Software Foundation, either version 3 of the License, or");
-              this.output("(at your option) any later version.");
-              this.output("This program is distributed in the hope that it will be useful,");
-              this.output("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-              this.output("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-              this.output("GNU General Public License for more details <http://www.gnu.org/licenses/>.");
+              this.output('This program is free software: you can redistribute it and/or modify');
+              this.output('it under the terms of the GNU General Public License as published by');
+              this.output('the Free Software Foundation, either version 3 of the License, or');
+              this.output('(at your option) any later version.');
+              this.output('This program is distributed in the hope that it will be useful,');
+              this.output('but WITHOUT ANY WARRANTY; without even the implied warranty of');
+              this.output('MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the');
+              this.output('GNU General Public License for more details <http://www.gnu.org/licenses/>.');
             }
           }
           break;
-      case "list":
-        parser = basic_parser("f(file)p(page)", "list");
+      case 'list':
+        parser = basic_parser('f(file)p(page)', 'list');
 
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
             case 'f':
-              if (typeof(this.file) !== "undefined") {
-                for(var i = 0; i < this.file.pageArray.length; ++ i) {
-                  this.output(util.format("page %d", i));
+              if (typeof(this.file) !== 'undefined') {
+                for (var i = 0; i < this.file.pageArray.length; ++ i) {
+                  this.output(util.format('page %d', i));
                 }
-              }
-              else {
+              } else {
                 this.output(STR_FILE_NOT_READY);
               }
               break;
             case 'p':
-              if (typeof(this.file) !== "undefined") {
-                if (typeof(this.file.getIndexPage()) !== "undefined") {
+              if (typeof(this.file) !== 'undefined') {
+                if (typeof(this.file.getIndexPage()) !== 'undefined') {
                   for(var i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
-                    this.output(util.format("%s", this.file.getIndexPage().getWord(i).term));
+                    this.output(util.format('%s', this.file.getIndexPage().getWord(i).term));
                   }
-                }
-                else {
+                } else {
                   this.output(STR_PAGE_NOT_READY);
                 }
-              }
-              else {
+              } else {
                 this.output(STR_FILE_NOT_READY);
               }
               break;
@@ -491,9 +480,9 @@ export class Wrwd {
           }
         }
         break;
-      case "new":
+      case 'new':
         let nword;
-        parser = basic_parser("f:(file)p(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)", "new");
+        parser = basic_parser('f:(file)p(page)w:(word)h:(phon)s:(source)i:(interp)e:(examp)r:(rem)', 'new');
 
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
@@ -503,7 +492,7 @@ export class Wrwd {
               this.output(option.optarg);
               break;
             case 'p':
-              if (typeof(this.file) !== "undefined") {
+              if (typeof(this.file) !== 'undefined') {
                 var pg = this.createPage();
                 this.file.backInsertPage(pg);
               } else {
@@ -511,9 +500,9 @@ export class Wrwd {
               }
               break;
             case 'w':
-              if (typeof(this.file) !== "undefined") {
-                if (typeof(this.file.getIndexPage()) !== "undefined") {
-                  nword = this.createWord({term:option.optarg});
+              if (typeof(this.file) !== 'undefined') {
+                if (typeof(this.file.getIndexPage()) !== 'undefined') {
+                  nword = this.createWord({term: option.optarg});
                 } else {
                   this.output(STR_PAGE_NOT_READY);
                 }
@@ -532,8 +521,8 @@ export class Wrwd {
               this.file.backInsertIndexWord(nword);
           }
           break;
-      case "next":
-        parser = basic_parser("d(distance)", "next");
+      case 'next':
+        parser = basic_parser('d(distance)', 'next');
 
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
@@ -544,94 +533,85 @@ export class Wrwd {
           }
         }
         break;
-      case "open":
-        parser = basic_parser("f:(file)", "open")
+      case 'open':
+        parser = basic_parser('f:(file)', 'open')
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "plugin":
-        parser = basic_parser("s(speech)a(auto)", "plugin");
+      case 'plugin':
+        parser = basic_parser('s(speech)a(auto)', 'plugin');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-              
           }
         }
         break;
-      case "previous":
-        parser = basic_parser("d(distance)", "previous");
+      case 'previous':
+        parser = basic_parser('d(distance)', 'previous');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "quit":
+      case 'quit':
         this.close();
         break;
-      case "redo":
+      case 'redo':
         break;
-      case "save":
-        parser = basic_parser("f:(file)x:(xmlfile)", "save");
+      case 'save':
+        parser = basic_parser('f:(file)x:(xmlfile)', 'save');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "show":
-        parser = basic_parser("l:(level)", "show");
+      case 'show':
+        parser = basic_parser('l:(level)', 'show');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "size":
-        parser = basic_parser("f:(file)p:(page)", "size");
+      case 'size':
+        parser = basic_parser('f:(file)p:(page)', 'size');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "sort":
-        parser = basic_parser("l(lexical)r(random)e(remember)", "sort");
+      case 'sort':
+        parser = basic_parser('l(lexical)r(random)e(remember)', 'sort');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "state":
-        parser = basic_parser("l:(linemode)m:(listmask)s:(showflag)", "state");
+      case 'state':
+        parser = basic_parser('l:(linemode)m:(listmask)s:(showflag)', 'state');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
-      case "undo":
+      case 'undo':
           break;
-      case "voice":
-        parser = basic_parser("w(word)e(examp)", "voice");
+      case 'voice':
+        parser = basic_parser('w(word)e(examp)', 'voice');
         while ((option = parser.getopt()) !== undefined) {
           switch (option.option) {
-
           }
         }
         break;
       default:
-        this.output("Unknown command");
+        this.output('Unknown command');
         break;
     }
   }
 
   public onFileChange(pgIdx, wdIdx, event, attr, how, newVal, oldVal) {
     console.log(`onFileChange called : ${pgIdx}, ${wdIdx}, ${event}, ${attr}, ${how}, ${newVal}, ${oldVal}`);
-    // $('.ui-layout-west > .file-explorer-content').jstree(true).refresh();
+    $('.ui-layout-west > .file-explorer-content').jstree(true).refresh();
   }
 
   public createWord(wd) {
@@ -641,7 +621,7 @@ export class Wrwd {
     let word = new canWord();
 
     wordProps.map((item) => {
-      if (word.hasOwnProperty(item)) {
+      if (wd.hasOwnProperty(item)) {
         word[item] = wd[item];
       }
     });
@@ -680,7 +660,7 @@ export class Wrwd {
 
   public setFile(f) {
     this.file = f;
-    canEvent.trigger(this.file, 'length');
+    $('.ui-layout-west > .file-explorer-content').jstree(true).refresh(false, true);
   }
 
   public close() {
