@@ -14,6 +14,7 @@ export class WrwdComponent {
 
   constructor(Auth, $window) {
     'ngInject';
+    let that = this;
     this.isLoggedIn = Auth.isLoggedInSync;
     this.isAdmin = Auth.isAdminSync;
     this.getCurrentUser = Auth.getCurrentUserSync;
@@ -276,9 +277,9 @@ export class WrwdComponent {
             'name' : 'default',
             'dots' : false
           },
-          'data' : function (obj, cb) {
-            cb.call(this, wrwd.fileJson());
-            //cb.call(this, ['Root 1', 'Root 2']);
+          'data' : (obj, cb) => {
+            cb.call(that, that.wrwd.fileJson());
+            //cb.call(that, ['Root 1', 'Root 2']);
           }
         },
         'lang' : {
@@ -313,8 +314,8 @@ export class WrwdComponent {
             break;
           case 190: // '>'
             if (shiftDown) {
-                wrwd.readline.focus();
-                return false;
+              wrwd.readline.focus();
+              return false;
             }
             break;
           case 27: // esc
