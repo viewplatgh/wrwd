@@ -109,6 +109,13 @@ let canPage = canList.extend({
       'children' : this.wordJson(),
       'type': 'page'
     };
+  },
+  slide_word: function (par) {
+    this.idx += par;
+    this.idx = this.idx >= 0 ?
+      this.idx % this.length :
+      (this.length - Math.abs(this.idx) % this.length) % this.length;
+    return this.idx;
   }
 });
 
@@ -167,8 +174,10 @@ let canFile = canList.extend({
         'text' : this.name,
         'type' : 'file',
         'children': this.pageJson(),
-      }
-    ];
+      }];
+  },
+  slide_word: function(par) {
+    this.getIndexPage().slide_word(par);
   }
 });
 
@@ -546,15 +555,28 @@ export class Wrwd {
         }
       },
       'next': () => {
-        parser = basic_parser('d(distance)', 'next');
-
-        while ((option = parser.getopt()) !== undefined) {
-          switch (option.option) {
-          case 'd':
-            break;
-          default:
-            break;
-          }
+        parser = basic_parser('d:(distance)', 'next');
+        option = parser.getopt();
+        if (option === undefined) {
+          option = { option: 'd', optarg: 1 };
+        }
+        switch (option.option) {
+        case 'd':
+          let oldIdx = this.file.getIndexPage().idx;
+          this.file.slide_word(parseInt(option.optarg, 10));
+          let newIdx = this.file.getIndexPage().idx;
+          this.onFileChange(
+              this.file.idx,
+              -1,
+              null,
+              'idx',
+              'change',
+              newIdx,
+              oldIdx
+          );
+          break;
+        default:
+          break;
         }
       },
       'open': () => {
@@ -572,10 +594,28 @@ export class Wrwd {
         }
       },
       'previous': () => {
-        parser = basic_parser('d(distance)', 'previous');
-        while ((option = parser.getopt()) !== undefined) {
-          switch (option.option) {
-          }
+        parser = basic_parser('d:(distance)', 'previous');
+        option = parser.getopt();
+        if (option === undefined) {
+          option = { option: 'd', optarg: 1 };
+        }
+        switch (option.option) {
+        case 'd':
+          let oldIdx = this.file.getIndexPage().idx;
+          this.file.slide_word(-1 * parseInt(option.optarg, 10));
+          let newIdx = this.file.getIndexPage().idx;
+          this.onFileChange(
+              this.file.idx,
+              -1,
+              null,
+              'idx',
+              'change',
+              newIdx,
+              oldIdx
+          );
+          break;
+        default:
+          break;
         }
       },
       // 'proxy': () => {},
