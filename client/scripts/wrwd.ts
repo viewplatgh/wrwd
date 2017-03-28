@@ -21,11 +21,12 @@ import { BasicParser } from './getopt';
 const STR_PAGE_NOT_READY = 'Page not ready. Create a page at first. e.g. new -p';
 const STR_PAGE_NOT_EXIST = 'Page %s does not exist';
 const STR_FILE_NOT_READY = 'File not ready. Create or open a file at first. e.g. new -f myvo';
-const STR_WORD_NOT_READY = 'Word not ready. Create a work at first. e.g. new -w hello';
+const STR_WORD_NOT_READY = 'Word not ready. Create a word at first. e.g. new -w hello';
 const STR_UNKNOWN_CMD_OPTION = 'Unknown command or option. Type help for usage information.';
 const STR_MISSING_OPTION = 'Missing valid option. Type help for usage information.';
 const STR_OPTION_ARGUMENT_NOT_A_NUMBER = 'Option argument is not a number';
 const STR_MATCH_MULTIPLE_CMD = '%s could match one of following commands: %s';
+const STR_OUT_OF_RANGE = 'Argument out of range';
 export const rememberType = { unknown: 0, imaging: 1, known: 2, familiar: 3, impressed: 4 };
 
 let canWord = canMap.extend({}, {
@@ -116,6 +117,12 @@ let canPage = canList.extend({
       this.idx % this.length :
       (this.length - Math.abs(this.idx) % this.length) % this.length;
     return this.idx;
+  },
+  setIndex: function (idx) {
+    this.idx = idx;
+  },
+  getIndex: function () {
+    return this.idx;
   }
 });
 
@@ -146,7 +153,7 @@ let canFile = canList.extend({
   },
   browsePage: function (pos: number) {
     let oldVal = this.idx;
-    this.idx = pos;
+    this.setIndex(pos);
     canEvent.trigger.call(this, 'length', ['idx', 'change', oldVal, pos]);
   },
   getPage: function (pos: number) {
@@ -176,8 +183,14 @@ let canFile = canList.extend({
         'children': this.pageJson(),
       }];
   },
-  slide_word: function(par) {
+  slide_word: function (par) {
     this.getIndexPage().slide_word(par);
+  },
+  setIndex: function (idx) {
+    this.idx = idx;
+  },
+  getIndex: function () {
+    return this.idx;
   }
 });
 
@@ -350,8 +363,24 @@ export class Wrwd {
       },
       'goto': () => {
         parser = basic_parser('', 'goto');
-        optarg = parser.getoptarg();
-        //TODO: this.goto        
+        optarg = parseInt(parser.getoptarg(), 10);
+        if (typeof(this.file.getIndexPage()) === 'undefined') {
+          this.output(STR_PAGE_NOT_READY);
+        } else {
+          if (this.file.getIndexPage().length === 0) {
+            this.output(STR_WORD_NOT_READY);
+          } else {
+            if (isNaN(optarg)) {
+              this.output(STR_UNKNOWN_CMD_OPTION);
+            } else if (optarg < this.file.getIndexPage().length && optarg >= 0) {
+              let oldVal = this.file.getIndexPage().getIndex();
+              this.file.getIndexPage().setIndex(optarg);
+              canEvent.trigger.call(this.file.getIndexPage(), 'length', ['idx', 'change', oldVal, optarg]);
+            } else {
+              this.output(STR_OUT_OF_RANGE);
+            }
+          }
+        }
       },
       'help': () => {
       // __t("usage of rwd:"),
