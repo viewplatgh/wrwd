@@ -28,13 +28,15 @@ const STR_OPTION_ARGUMENT_NOT_A_NUMBER = 'Option argument is not a number';
 const STR_MATCH_MULTIPLE_CMD = '%s could match one of following commands: %s';
 const STR_OUT_OF_RANGE = 'Argument out of range';
 export const rememberType = { unknown: 0, imaging: 1, known: 2, familiar: 3, impressed: 4 };
+const rememberDesc = ['unknown', 'imaging', 'known', 'familiar', 'impressed'];
 
 let canWord = canMap.extend({}, {
   term: '',
   phon: '',
   source: '',
+  intp: '',
   examp: '',
-  rem: rememberType.unknown,
+  rem: '',
   json: function (i: number, pgIdx: number) {
     return {
       'id' : `word_${this.term}_${i}`,
@@ -514,7 +516,7 @@ export class Wrwd {
           switch (option.option) {
             case 'f':
               if (typeof(this.file) !== 'undefined') {
-                for (let i = 0; i < this.file.pageArray.length; ++ i) {
+                for (let i = 0; i < this.file.length; ++ i) {
                   this.output(util.format('page %d', i));
                 }
               } else {
@@ -524,7 +526,7 @@ export class Wrwd {
             case 'p':
               if (typeof(this.file) !== 'undefined') {
                 if (typeof(this.file.getIndexPage()) !== 'undefined') {
-                  for (let i = 0; i < this.file.getIndexPage().wordArray.length; ++ i) {
+                  for (let i = 0; i < this.file.getIndexPage().length; ++ i) {
                     this.output(util.format('%s', this.file.getIndexPage().getWord(i).term));
                   }
                 } else {
@@ -571,6 +573,45 @@ export class Wrwd {
                 } else {
                   this.output(STR_FILE_NOT_READY);
                 }
+                break;
+              case 'h':
+                if (!nword) {
+                  this.output(STR_MISSING_OPTION);
+                  return;
+                }
+                nword.phon = option.optarg;
+                break;
+              case 's':
+                if (!nword) {
+                  this.output(STR_MISSING_OPTION);
+                  return;
+                }
+                nword.source = option.optarg;
+                break;
+              case 'i':
+                if (!nword) {
+                  this.output(STR_MISSING_OPTION);
+                  return;
+                }
+                nword.intp = option.optarg;
+                break;
+              case 'e':
+                if (!nword) {
+                  this.output(STR_MISSING_OPTION);
+                  return;
+                }
+                nword.examp = option.optarg;
+                break;
+              case 'r':
+                if (!nword) {
+                  this.output(STR_MISSING_OPTION);
+                  return;
+                }
+                if (rememberType[option.optarg] === undefined) {
+                  this.output(STR_UNKNOWN_CMD_OPTION);
+                  return;
+                }
+                nword.rem = rememberType[option.optarg];
                 break;
               default:
                 break;
@@ -660,10 +701,37 @@ export class Wrwd {
         }
       },
       'show': () => {
+        if (!this.checkFile() ||
+          !this.checkIndexPage() ||
+          !this.checkIndexWord()) {
+          return;
+        }
         parser = basic_parser('l:(level)', 'show');
-        while ((option = parser.getopt()) !== undefined) {
-          switch (option.option) {
-          }
+        option = parser.getopt();
+        if (option === undefined) {
+          option = { option: 'l', optarg: 0 };
+        }
+
+        switch (option.option) {
+          case 'l':
+            let idxWord = this.file.getIndexPage().getIndexWord();
+            this.output(idxWord.term);
+            this.output(rememberDesc[idxWord.rem]);
+            if (option.optarg >= 1) {
+              this.output(idxWord.phon);
+            }
+            if (option.optarg >= 2) {
+              this.output(idxWord.examp);
+            }
+            if (option.optarg >= 3) {
+              this.output(idxWord.intp);
+            }
+            if (option.optarg >= 4) {
+              this.output(idxWord.source);
+            }
+            break;
+          default:
+            break;
         }
       },
       'size': () => {
@@ -781,4 +849,33 @@ export class Wrwd {
       return [];
     }
   }
+
+  public checkFile() {
+    if (!this.file) {
+      this.output(STR_FILE_NOT_READY);
+      return false;
+    }
+    return true;
+  }
+
+  public checkIndexPage() {
+    if (this.file && this.file.getIndexPage()) {
+      return true;
+    } else {
+      this.output(STR_PAGE_NOT_READY);
+      return false;
+    }
+  }
+
+  public checkIndexWord() {
+    if (this.file &&
+      this.file.getIndexPage() &&
+      this.file.getIndexPage().getIndexWord()) {
+        return true;
+    } else {
+      this.output(STR_WORD_NOT_READY);
+      return false;
+    }
+  }
+
 }
