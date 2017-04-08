@@ -17,6 +17,7 @@ let canList = require('can-define/list/list');
 let canMap = require('can-define/map/map');
 let canEvent = require('can-event');
 import { BasicParser } from './getopt';
+import { Util } from './util';
 
 const STR_PAGE_NOT_READY = 'Page not ready. Create a page at first. e.g. new -p';
 const STR_PAGE_NOT_EXIST = 'Page %s does not exist';
@@ -44,6 +45,13 @@ let canWord = canMap.extend({}, {
       'type': 'word',
     };
   },
+  swap: function (wd) {
+    for (let item of ['term', 'phon', 'source', 'intp', 'examp', 'rem']) {
+      let tmp = this[item];
+      this[item] = wd[item];
+      wd[item] = tmp;
+    }
+  }
 });
 
 let canPage = canList.extend({
@@ -113,7 +121,7 @@ let canPage = canList.extend({
       'type': 'page'
     };
   },
-  slide_word: function (par) {
+  slideWord: function (par) {
     this.idx += par;
     this.idx = this.idx >= 0 ?
       this.idx % this.length :
@@ -185,8 +193,8 @@ let canFile = canList.extend({
         'children': this.pageJson(),
       }];
   },
-  slide_word: function (par) {
-    this.getIndexPage().slide_word(par);
+  slideWord: function (par) {
+    this.getIndexPage().slideWord(par);
   },
   setIndex: function (idx) {
     this.idx = idx;
@@ -633,9 +641,9 @@ export class Wrwd {
         switch (option.option) {
         case 'd':
           let oldIdx = this.file.getIndexPage().idx;
-          this.file.slide_word(parseInt(option.optarg, 10));
+          this.file.slideWord(parseInt(option.optarg, 10));
           let newIdx = this.file.getIndexPage().idx;
-          this.onFileChange(
+          Wrwd.onFileChange(
               this.file.idx,
               -1,
               null,
@@ -672,9 +680,9 @@ export class Wrwd {
         switch (option.option) {
         case 'd':
           let oldIdx = this.file.getIndexPage().idx;
-          this.file.slide_word(-1 * parseInt(option.optarg, 10));
+          this.file.slideWord(-1 * parseInt(option.optarg, 10));
           let newIdx = this.file.getIndexPage().idx;
-          this.onFileChange(
+          Wrwd.onFileChange(
               this.file.idx,
               -1,
               null,
@@ -735,18 +743,58 @@ export class Wrwd {
         }
       },
       'size': () => {
-        parser = basic_parser('f:(file)p:(page)', 'size');
-        while ((option = parser.getopt()) !== undefined) {
-          switch (option.option) {
-          }
+        parser = basic_parser('f(file)p(page)', 'size');
+        if ((option = parser.getopt()) === undefined) {
+          option = { option: 'p' };
         }
+        do {
+          switch (option.option) {
+          case 'f':
+            if (!this.checkFile()) {
+              return;
+            }
+            this.output(this.file.length);
+            break;
+          case 'p':
+            if (!this.checkIndexPage()) {
+              return;
+            }
+            this.output(this.file.getIndexPage().length);
+            break;
+          default:
+            break;
+          }
+        } while ((option = parser.getopt()) !== undefined);
       },
       'sort': () => {
-        parser = basic_parser('l(lexical)r(random)e(remember)', 'sort');
-        while ((option = parser.getopt()) !== undefined) {
-          switch (option.option) {
-          }
+        if (!this.checkFile() || !this.checkIndexPage()) {
+          return;
         }
+        parser = basic_parser('l(lexical)r(random)e(remember)', 'sort');
+        if ((option = parser.getopt()) === undefined) {
+          option = { option: 'l' };
+        }
+        do {
+          switch (option.option) {
+          case 'l':
+            this.file.getIndexPage().sort((a, b) => {
+              return a.term > b.term;
+            });
+            break;
+          case 'r':
+            this.file.getIndexPage().sort((a, b) => {
+              return Math.random() > 0.49;
+            });
+            break;
+          case 'e':
+            this.file.getIndexPage().sort((a, b) => {
+              return a.rem > b.rem;
+            });
+            break;
+          default:
+            break;
+          }
+        } while ((option = parser.getopt()) !== undefined);
       },
       'state': () => {
         parser = basic_parser('l:(linemode)m:(listmask)s:(showflag)', 'state');
@@ -783,15 +831,17 @@ export class Wrwd {
     }
   }
 
-  public onFileChange(pgIdx, wdIdx, event, attr, how, newVal, oldVal) {
+  public static onFileChange(pgIdx, wdIdx, event, attr, how, newVal, oldVal) {
     console.log(`onFileChange called : ${pgIdx}, ${wdIdx}, ${event}, ${attr}, ${how}, ${newVal}, ${oldVal}`);
     $('.ui-layout-west > .file-explorer-content').jstree(true).refresh();
   }
 
-  public createWord(wd) {
-    let that = this;
-    let wordProps = ['term', 'phon', 'source', 'examp', 'rem'];
+  public static handleWordChange(event, attr, how, newVal, oldVal) {
+    Wrwd.onFileChange(0, 0, event, attr, how, newVal, oldVal);
+  }
 
+  public createWord(wd) {
+    let wordProps = ['term', 'phon', 'source', 'examp', 'rem'];
     let word = new canWord();
 
     wordProps.map((item) => {
@@ -800,34 +850,31 @@ export class Wrwd {
       }
     });
 
-    word.bind('change', (event, attr, how, newVal, oldVal) => {
-      that.onFileChange(0, 0, event, attr, how, newVal, oldVal);
-    });
-
+    word.bind('change', Wrwd.handleWordChange);
     return word;
   }
 
+  public static handlePageChange(event, attr, how, newVal, oldVal) {
+    Wrwd.onFileChange(0, -1, event, attr, how, newVal, oldVal);
+  }
+
   public createPage() {
-    let that = this;
-
     let page = new canPage();
-    let handler = (event, attr, how, newVal, oldVal) => {
-      that.onFileChange(0, -1, event, attr, how, newVal, oldVal);
-    };
 
-    page.bind('length', handler);
-    page.bind('change', handler);
+    page.bind('length', Wrwd.handlePageChange);
+    page.bind('change', Wrwd.handlePageChange);
+
     return page;
   }
 
-  public createFile(name: string) {
-    let that = this;
+  public static handleFileChange(event, attr, how, newVal, oldVal) {
+    Wrwd.onFileChange(-1, -1, event, attr, how, newVal, oldVal);
+  }
 
+  public createFile(name: string) {
     let file = new canFile();
     file.name = name;
-    file.bind('length', (event, attr, how, newVal, oldVal) => {
-      that.onFileChange(-1, -1, event, attr, how, newVal, oldVal);
-    });
+    file.bind('length', Wrwd.handleFileChange);
 
     return file;
   }
